@@ -1,44 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Chat Interface</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    .dot-flashing {
-      position: relative;
-      width: 10px;
-      height: 10px;
-      border-radius: 5px;
-      background-color: #ffffff;
-      animation: dotFlashing 1s infinite linear alternate;
-    }
-    .dot-flashing::before, .dot-flashing::after {
-      content: '';
-      display: inline-block;
-      position: absolute;
-      top: 0;
-      width: 10px;
-      height: 10px;
-      border-radius: 5px;
-      background-color: #ffffff;
-    }
-    .dot-flashing::before {
-      left: -15px;
-      animation: dotFlashing 1s infinite linear alternate;
-      animation-delay: 0.2s;
-    }
-    .dot-flashing::after {
-      left: 15px;
-      animation: dotFlashing 1s infinite linear alternate;
-      animation-delay: 0.4s;
-    }
-    @keyframes dotFlashing {
-      0% { opacity: 0.2; }
-      100% { opacity: 1; }
-    }
-  </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Chat Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-neutral-900 text-white h-screen flex flex-col justify-center items-center">
 
@@ -78,60 +45,6 @@
                   
     </div>
 
-    <script>
-        const chatBox = document.getElementById('chat-box');
-        const chatForm = document.getElementById('chat-form');
-        const userInput = document.getElementById('user-input');
-
-        chatForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const userMessage = userInput.value;
-
-            // Display user's message
-            chatBox.innerHTML += `
-            <div class="text-right">
-                <div class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg">
-                ${userMessage}
-                </div>
-            </div>
-            `;
-            userInput.value = '';
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Show thinking indicator
-            const thinkingIndicator = document.createElement('div');
-            thinkingIndicator.className = "text-left flex items-center space-x-2";
-            thinkingIndicator.innerHTML = `
-            <div class="inline-block px-4 py-2 rounded-lg">
-                <div class="dot-flashing"></div>
-            </div>
-            `;
-            chatBox.appendChild(thinkingIndicator);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            // Fetch AI response
-            const response = await fetch('/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ message: userMessage })
-            });
-
-            const data = await response.json();
-            const aiReply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
-
-            // Remove thinking indicator
-            chatBox.removeChild(thinkingIndicator);
-
-            // Display AI response
-            chatBox.innerHTML += `
-            <div class="text-left">
-                <div class="inline-block bg-neutral-700 text-white px-4 py-2 rounded-lg">
-                ${aiReply}
-                </div>
-            </div>
-            `;
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-    </script>
+    <script src="{{ url_for('static', filename='chat.js') }}"></script>
 </body>
 </html>

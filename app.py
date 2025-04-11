@@ -3,7 +3,6 @@ from model import load_user_profile, build_system_prompt, get_completion_from_me
 
 app = Flask(__name__)
 
-# Load the user profile and build the system prompt at startup
 profile = load_user_profile()
 if not profile:
     raise ValueError("Profile could not be loaded.")
@@ -12,23 +11,21 @@ system_prompt = build_system_prompt(profile)
 
 @app.route("/")
 def index():
-    """Serve the main chat interface."""
+    '''function to handle chat interface'''
     return render_template("index.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    """Handle chat requests from the frontend."""
+    '''function to handle interaction between user and model'''
     user_message = request.json.get("message")
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
 
-    # Prepare the conversation messages
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_message}
     ]
 
-    # Get the AI's response
     response = get_completion_from_messages(messages)
     if response:
         return jsonify({"response": response})
