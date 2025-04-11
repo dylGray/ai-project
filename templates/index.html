@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat Interface</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .dot-flashing {
+      position: relative;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: #ffffff;
+      animation: dotFlashing 1s infinite linear alternate;
+    }
+    .dot-flashing::before, .dot-flashing::after {
+      content: '';
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      background-color: #ffffff;
+    }
+    .dot-flashing::before {
+      left: -15px;
+      animation: dotFlashing 1s infinite linear alternate;
+      animation-delay: 0.2s;
+    }
+    .dot-flashing::after {
+      left: 15px;
+      animation: dotFlashing 1s infinite linear alternate;
+      animation-delay: 0.4s;
+    }
+    @keyframes dotFlashing {
+      0% { opacity: 0.2; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body class="bg-neutral-900 text-white h-screen flex flex-col justify-center items-center">
+
+    <div class="text-center mt-24 max-w-4xl">
+        <h1 class="text-3xl font-bold text-white mb-2">Talk to the Right AI for the Job</h1>
+
+        <p class="text-neutral-400 text-base">
+            Seamlessly switch between powerful AI models tailored to your needs—whether you're brainstorming ideas, solving technical problems, or just having a conversation. This app gives you the flexibility to choose the best brain for the task at hand.
+        </p>
+    </div>
+      
+
+    <div class="w-full max-w-4xl h-[75vh] flex flex-col justify-between p-4">
+        <div id="chat-box" class="flex-1 overflow-y-auto rounded-lg p-4 bg-neutral-800 shadow-inner space-y-4"></div>
+
+        <form id="chat-form" class="mt-4 flex items-center bg-neutral-800 rounded-full px-4 py-2 shadow-md h-14">
+            <input 
+              id="user-input" 
+              type="text" 
+              class="flex-grow h-full bg-transparent text-white focus:outline-none placeholder-neutral-400 px-3" 
+              placeholder="Ask anything..." 
+              required
+            />
+            <button 
+              type="submit" 
+              class="ml-2 w-11 h-11 flex items-center justify-center text-white hover:text-blue-400"
+              aria-label="Send message"
+            >
+              <!-- Flipped Paper Plane Icon -->
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                   stroke-width="1.5" stroke="currentColor" class="w-6 h-6 scale-x-[-1]">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M3.75 12L20.25 3.75 12 12l8.25 8.25L3.75 12z" />
+              </svg>
+            </button>
+          </form>          
+                  
+    </div>
+
+    <script>
+        const chatBox = document.getElementById('chat-box');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        chatForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const userMessage = userInput.value;
+
+            // Display user's message
+            chatBox.innerHTML += `
+            <div class="text-right">
+                <div class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg">
+                ${userMessage}
+                </div>
+            </div>
+            `;
+            userInput.value = '';
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Show thinking indicator
+            const thinkingIndicator = document.createElement('div');
+            thinkingIndicator.className = "text-left flex items-center space-x-2";
+            thinkingIndicator.innerHTML = `
+            <div class="inline-block px-4 py-2 rounded-lg">
+                <div class="dot-flashing"></div>
+            </div>
+            `;
+            chatBox.appendChild(thinkingIndicator);
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            // Fetch AI response
+            const response = await fetch('/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: userMessage })
+            });
+
+            const data = await response.json();
+            const aiReply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
+
+            // Remove thinking indicator
+            chatBox.removeChild(thinkingIndicator);
+
+            // Display AI response
+            chatBox.innerHTML += `
+            <div class="text-left">
+                <div class="inline-block bg-neutral-700 text-white px-4 py-2 rounded-lg">
+                ${aiReply}
+                </div>
+            </div>
+            `;
+            chatBox.scrollTop = chatBox.scrollHeight;
+        });
+    </script>
+</body>
+</html>
