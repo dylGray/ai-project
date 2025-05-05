@@ -1,4 +1,4 @@
-# Priority Pitch
+# Priority Pitch for RPG
 
 ## Installation
 To get started, clone the repository and install the necessary dependencies:
