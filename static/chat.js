@@ -2,6 +2,13 @@ const chatBox = document.getElementById('chat-box');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 
+function formatResponse(text) {
+    // Replace Markdown-style bold with HTML <strong> tags
+    const bolded = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    // Convert newlines to <br> tags
+    return bolded.replace(/\n/g, "<br>");
+}
+
 chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const userMessage = userInput.value;
@@ -40,7 +47,7 @@ chatForm.addEventListener('submit', async (e) => {
     chatBox.innerHTML += `
     <div class="text-left">
         <div class="inline-block bg-neutral-700 text-white px-4 py-2 rounded-lg">
-        ${aiReply}
+        ${formatResponse(aiReply)}
         </div>
     </div>
     `;

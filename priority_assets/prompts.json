@@ -1,0 +1,58 @@
+[
+    {
+        "question": "Who is the target decision-maker?",
+        "usage": "Tailor the pitch to the priorities of the decision-maker.",
+        "follow_up": "Challenge comfort-zone roles; encourage growth-zone targets like VPs or above.",
+        "good_example": "VP of Sales",
+        "bad_example": "Facilities Manager"
+    },
+    {
+        "question": "What industry is the prospect in?",
+        "usage": "Customize language and threat to fit the industry context.",
+        "follow_up": "Accept as-is; used to personalize the pitch.",
+        "good_example": "Healthcare",
+        "bad_example": "N/A"
+    },
+    {
+        "question": "What is the biggest threat the prospect is facing?",
+        "usage": "Drives the core narrative; shapes the 'Threat' and 'Relief'.",
+        "follow_up": "Ask 'Why does this matter now?' or 'What happens if this persists?'",
+        "good_example": "Revenue erosion due to shrinking margins",
+        "bad_example": "They're always hiring"
+    },
+    {
+        "question": "Why does this threat matter now?",
+        "usage": "Adds urgency and business relevance.",
+        "follow_up": "Challenge vague timelines; ask about immediate risks or consequences.",
+        "good_example": "They're seeing churn from top customers this quarter",
+        "bad_example": "It just matters"
+    },
+    {
+        "question": "How does your offering specifically address this threat?",
+        "usage": "Forms the 'Relief' in the pitch.",
+        "follow_up": "Challenge if they list features; ask how it directly impacts the threat.",
+        "good_example": "Helps sellers get into deals earlier to avoid price-based competition",
+        "bad_example": "Includes an onboarding portal and CRM sync"
+    },
+    {
+        "question": "What is the unique differentiator of your solution?",
+        "usage": "Optional — only include if directly related to solving the threat.",
+        "follow_up": "Challenge vague or generic differentiators; ask 'Why does that matter?'",
+        "good_example": "We help reps get access to real decision-makers 2x faster than the average cycle",
+        "bad_example": "We've been in business 50 years"
+    },
+    {
+        "question": "What compelling proof or insight can you provide?",
+        "usage": "Optional — adds weight to the relief section.",
+        "follow_up": "Only include if true, unique, and tied to the threat.",
+        "good_example": "Clients see 22% higher margins within the first 90 days",
+        "bad_example": "We're ISO certified"
+    },
+    {
+        "question": "What immediate next step do you want the prospect to take?",
+        "usage": "Optional — use as CTA or transition.",
+        "follow_up": "Use a soft CTA; avoid hard asks unless relevant.",
+        "good_example": "Schedule a 20-minute discovery call",
+        "bad_example": "Buy now"
+    }
+]
