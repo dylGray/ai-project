@@ -1,2 +1,2 @@
 # Vercel's Flask entry point
-from app import app as application
+from app import app
