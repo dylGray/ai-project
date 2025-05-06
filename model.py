@@ -12,10 +12,9 @@ else:
 
 client = OpenAI(api_key=api_key)
 
-# how we tell the AI model what to do
 def build_system_prompt():
     '''Return a system prompt that provides all necessary context for the AI assistant.'''
-    # Load the markdown and json files
+    # load the md and json files
     try:
         with open("priority_assets/framework.md", "r") as f:
             framework_md = f.read()
@@ -44,7 +43,7 @@ def build_system_prompt():
         prompts_json = ""
         print(f"Warning: Could not load prompts.json: {e}")
 
-    # Build the prompt context by concatenating the files' content.
+    # build the prompt context by concatenating the files content
     context = (
         "Priority Pitch Context:\n\n"
         "--- Framework ---\n"
@@ -56,6 +55,7 @@ def build_system_prompt():
         "--- Follow-Up Prompt Examples ---\n"
         f"{prompts_json}\n\n"
     )
+    
     instructions = (
         "You are a professional AI assistant trained to evaluate Priority Pitches. When a user submits a Priority Pitch, "
         "evaluate it using the Priority Pitch Framework, Grading Criteria, and Coaching Guidance provided.\n\n"
@@ -72,7 +72,7 @@ def build_system_prompt():
         "**Length**:\nWithin 100–150 words. Ideal.\n\n"
         "**Clarity**:\nEasy to read and say out loud.\n\n"
 
-        "⚠️ Always:\n"
+        "Always:\n"
         "- Start with the grade on its own line, formatted as **Grade: X**.\n"
         "- Include a blank line after the grade.\n"
         "- Use **bold section headers** (Pain, Threat, Belief Statement, etc.), followed by a colon and a newline.\n"
@@ -95,27 +95,3 @@ def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_t
     except Exception as e:
         print(f"Error fetching completion: {e}")
         return None
-
-def chat():
-    '''Run the AI model locally in the terminal.'''
-    print('🧠 Welcome to Your Personal AI Assistant! (type "exit" or "quit" to end session)\n')
-
-    system_prompt = build_system_prompt()
-    messages = [{"role": "system", "content": system_prompt}]
-
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() in ["exit", "quit"]:
-            print("👋 Goodbye!")
-            break
-
-        messages.append({"role": "user", "content": user_input})
-        response = get_completion_from_messages(messages)
-        if response:
-            print(f"\nAI 🤖: {response}\n")
-            messages.append({"role": "assistant", "content": response})
-        else:
-            print("Something went wrong. Try again.")
-
-if __name__ == "__main__":
-    chat()

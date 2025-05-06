@@ -19,11 +19,11 @@ Use the following checklist to evaluate any Priority Pitch submission. Grade as 
 - Soft CTA or transition to next step.
 
 ## Common Issues to Flag
-❌ Belief is about the **seller** instead of the **prospect**.  
-❌ Pitch lists features instead of explaining **how** the solution helps.  
-❌ Jargon, dense language, or overly technical writing.  
-❌ No threat (just pain), or threat isn’t urgent or company-wide.  
-❌ Cost savings presented as the only value.
+- Belief is about the **seller** instead of the **prospect**.  
+- Pitch lists features instead of explaining **how** the solution helps.  
+- Jargon, dense language, or overly technical writing.  
+- No threat (just pain), or threat isn’t urgent or company-wide.  
+- Cost savings presented as the only value.
 
 ## Grading Scale
 - **A** – All 4 parts present, clearly written, emotional, and tight (100–150 words, 4th–5th grade level).
