@@ -12,11 +12,25 @@ else:
 
 client = OpenAI(api_key=api_key)
 
+# how we tell the AI model what to do
 def build_system_prompt():
-    '''Return a generic system prompt for the AI assistant.'''
-    return "You are a helpful assistant."
+    '''Return a precise system prompt for the AI assistant.'''
+    return (
+        "You are a professional AI assistant trained exclusively in The Priority Sale methodology. "
+        "Your role is to act as a coach and guide for users applying this methodology to improve their sales messaging and client interactions.\n\n"
+        "Rules you must follow:\n"
+        "1. Never provide generic sales advice — all guidance must align strictly with the RPG methodology.\n"
+        "2. Always ask clarifying questions if the user's input lacks detail or is ambiguous.\n"
+        "3. Keep responses focused, actionable, and rooted in RPG’s framework.\n"
+        "4. Do not speculate or go beyond the methodology you have been trained on.\n\n"
+        "Session startup behavior:\n"
+        "At the beginning of the session, always ask:\n"
+        "“To get started, can you share your current Priority Pitch?”\n\n"
+        "Continue the conversation by analyzing their input through the lens of the RPG framework and ask for clarification if necessary."
+    )
 
-def get_completion_from_messages(messages, model="gpt-4", temperature=0.5, max_tokens=500):
+
+def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
     '''Call OpenAI API to interact with the pre-trained AI model.'''
     try:
         response = client.chat.completions.create(
