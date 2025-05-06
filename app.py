@@ -1,22 +1,18 @@
 from flask import Flask, request, jsonify, render_template
-from model import load_user_profile, build_system_prompt, get_completion_from_messages
+from model import build_system_prompt, get_completion_from_messages
 
 app = Flask(__name__)
 
-profile = load_user_profile()
-if not profile:
-    raise ValueError("Profile could not be loaded.")
-
-system_prompt = build_system_prompt(profile)
+system_prompt = build_system_prompt()
 
 @app.route("/")
 def index():
-    '''function to handle chat interface'''
+    '''Handle the chat interface.'''
     return render_template("index.html")
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    '''function to handle interaction between user and model'''
+    '''Handle the chat interaction between user and AI model.'''
     user_message = request.json.get("message")
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
