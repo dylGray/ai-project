@@ -1,5 +1,7 @@
 # Priority Pitch Framework
 
+This document provides the foundational guidelines for crafting an effective Priority Pitch. 
+
 ## Overview
 A Priority Pitch is a short narrative (100–150 words, max 170 words) where:
 - **Prospect:** Roles as the protagonist.
