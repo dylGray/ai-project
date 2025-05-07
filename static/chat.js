@@ -14,8 +14,8 @@ chatForm.addEventListener('submit', async (e) => {
     const userMessage = userInput.value;
 
     chatBox.innerHTML += `
-    <div class="text-left">
-        <div class="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg">
+    <div class="text-right">
+        <div class="text-left inline-block bg-blue-600 text-white px-4 py-2 rounded-lg">
         ${userMessage}
         </div>
     </div>
