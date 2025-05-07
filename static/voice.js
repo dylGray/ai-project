@@ -2,14 +2,16 @@ const micButton = document.getElementById("mic-button");
 
 if ('webkitSpeechRecognition' in window) {
   const recognition = new webkitSpeechRecognition();
-  recognition.continuous = false;
-  recognition.interimResults = false;
+  recognition.continuous = true; // keep capturing until stopped manually
+  recognition.interimResults = false; // only use final results
   recognition.lang = 'en-US';
 
   let recognizing = false;
+  let finalTranscript = ""; // to accumulate the results
 
   micButton.addEventListener("click", () => {
     if (!recognizing) {
+      finalTranscript = ""; // reset transcript when starting
       recognition.start();
       recognizing = true;
       micButton.classList.add("text-red-500");
@@ -21,11 +23,20 @@ if ('webkitSpeechRecognition' in window) {
   });
 
   recognition.onresult = (event) => {
-    const transcript = event.results[0][0].transcript.trim();
-    document.getElementById("user-input").value = transcript;
+    // Iterate through the results and accumulate final transcripts.
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+      if (event.results[i].isFinal) {
+        finalTranscript += event.results[i][0].transcript + " ";
+      }
+    }
+  };
 
-    // Automatically submit the form
-    document.getElementById("chat-form").dispatchEvent(new Event("submit"));
+  recognition.onend = () => {
+    if (finalTranscript.trim().length > 0) {
+      document.getElementById("user-input").value = finalTranscript.trim();
+      // Automatically submit the form when recognition stops.
+      document.getElementById("chat-form").dispatchEvent(new Event("submit"));
+    }
   };
 
   recognition.onerror = (event) => {
