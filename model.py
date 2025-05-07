@@ -13,8 +13,16 @@ else:
 client = OpenAI(api_key=api_key)
 
 def build_system_prompt():
-    '''Return a system prompt that provides all necessary context for the AI assistant.'''
-    # load the md and json files
+    '''
+    Build the system prompt for the AI model by loading context and instructions from markdown and JSON files.
+
+    High-level overview:
+    - Reads the Priority Pitch framework, grading criteria, coaching guidance, and prompt examples from local files.
+    - Concatenates the contents into a single string (context) to provide the model with all necessary background and rules.
+    - Appends strict instructions on how to evaluate, grade, and give feedback on user-submitted pitches.
+    - Returns the full prompt string, which is sent as the "system" message to the OpenAI API.
+    '''
+    
     try:
         with open("priority_assets/framework.md", "r") as f:
             framework_md = f.read()
@@ -61,17 +69,25 @@ def build_system_prompt():
         "evaluate it rigorously using the Priority Pitch Framework, Grading Criteria, and Coaching Guidance provided. "
         "Keep in mind that most pitches will not meet the criteria; therefore, be strict in your grading and clear in your feedback.\n\n"
 
-        "You must return your evaluation in the following strict format:\n\n"
+        "First, analyze the user's pitch and identify which of the following required elements are present: "
+        "Pain, Threat, Belief Statement, Relief, Tone, Length, and Clarity. "
+        "List the elements that are present in the pitch, and then clearly state which elements are missing.\n\n"
+
+        "If any required elements are missing, inform the user exactly which ones are missing and explain that a full and accurate grade cannot be given until all required elements are included. "
+        "Encourage the user to revise their pitch to include the missing elements for a complete assessment.\n\n"
+
+        "If all required elements are present, proceed to return your evaluation in the following strict format:\n\n"
+
+        "When listing your evaluation for each required element, include a ✅ if the element is clearly present, or a ❌ if it is missing or weak. Place the icon directly next to the section title."
 
         "**Grade: X**\n\n"
-
-        "**Pain**:\n[Your detailed evaluation of how well the pitch describes the prospect's pain.]\n\n"
-        "**Threat**:\n[Your detailed evaluation of the clarity and impact of the threat.]\n\n"
-        "**Belief Statement**:\n[Your detailed evaluation of whether it starts correctly and focuses on the prospect.]\n\n"
-        "**Relief**:\n[Your detailed evaluation of how well the solution is presented without listing features.]\n\n"
-        "**Tone**:\n[Your evaluation of the language's emotional resonance and clarity.]\n\n"
-        "**Length**:\n[Your evaluation regarding whether the pitch fits within the ideal word count.]\n\n"
-        "**Clarity**:\n[Your evaluation on how easily the pitch could be spoken aloud.]\n\n"
+        "**Pain** ✅ or ❌\n[Your detailed evaluation of how well the pitch describes the prospect's pain.]\n\n"
+        "**Threat** ✅ or ❌\n[Your detailed evaluation of the clarity and impact of the threat.]\n\n"
+        "**Belief Statement** ✅ or ❌\n[Your detailed evaluation of whether it starts correctly and focuses on the prospect.]\n\n"
+        "**Relief** ✅ or ❌\n[Your detailed evaluation of how well the solution is presented without listing features.]\n\n"
+        "**Tone** ✅ or ❌\n[Your evaluation of the language's emotional resonance and clarity.]\n\n"
+        "**Length** ✅ or ❌\n[Your evaluation regarding whether the pitch fits within the ideal word count.]\n\n"
+        "**Clarity** ✅ or ❌\n[Your evaluation on how easily the pitch could be spoken aloud.]\n\n"
 
         "Always:\n"
         "- Use a harsh grading scale; if there are any deviations from the guidelines, penalize accordingly.\n"
