@@ -7,8 +7,6 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 if not api_key:
     raise ValueError("API Key not found. Check your .env file.")
-else:
-    print(f"API Key: {api_key}")
 
 client = OpenAI(api_key=api_key)
 
@@ -81,13 +79,13 @@ def build_system_prompt():
         "When listing your evaluation for each required element, include a ✅ if the element is clearly present, or a ❌ if it is missing or weak. Place the icon directly next to the section title."
 
         "**Grade: X**\n\n"
-        "**Pain** ✅ or ❌\n[Your detailed evaluation of how well the pitch describes the prospect's pain.]\n\n"
-        "**Threat** ✅ or ❌\n[Your detailed evaluation of the clarity and impact of the threat.]\n\n"
-        "**Belief Statement** ✅ or ❌\n[Your detailed evaluation of whether it starts correctly and focuses on the prospect.]\n\n"
-        "**Relief** ✅ or ❌\n[Your detailed evaluation of how well the solution is presented without listing features.]\n\n"
-        "**Tone** ✅ or ❌\n[Your evaluation of the language's emotional resonance and clarity.]\n\n"
-        "**Length** ✅ or ❌\n[Your evaluation regarding whether the pitch fits within the ideal word count.]\n\n"
-        "**Clarity** ✅ or ❌\n[Your evaluation on how easily the pitch could be spoken aloud.]\n\n"
+        "**Pain** ✅ or ❌\nYour detailed evaluation of how well the pitch describes the prospect's pain.\n\n"
+        "**Threat** ✅ or ❌\nYour detailed evaluation of the clarity and impact of the threat.\n\n"
+        "**Belief Statement** ✅ or ❌\nYour detailed evaluation of whether it starts correctly and focuses on the prospect.\n\n"
+        "**Relief** ✅ or ❌\nYour detailed evaluation of how well the solution is presented without listing features.\n\n"
+        "**Tone** ✅ or ❌\nYour evaluation of the language's emotional resonance and clarity.\n\n"
+        "**Length** ✅ or ❌\nYour evaluation regarding whether the pitch fits within the ideal word count.\n\n"
+        "**Clarity** ✅ or ❌\nYour evaluation on how easily the pitch could be spoken aloud.\n\n"
 
         "Always:\n"
         "- Use a harsh grading scale; if there are any deviations from the guidelines, penalize accordingly.\n"
