@@ -35,33 +35,34 @@ def chat():
     response = get_completion_from_messages(messages)
 
     if response:
-        print("[DEBUG] Full model response:\n", response, flush=True)
+        # print("[DEBUG] Full model response:\n", response, flush=True)
 
         match = re.search(r"Grade:\s*(.*)", response)
         score = match.group(1).strip() if match else None
 
-        print(f"[DEBUG] Extracted score: {score}", flush=True)
+        # print(f"[DEBUG] Extracted score: {score}", flush=True)
 
         if score:
             save_submission(email, user_message, score, response)
 
-        return jsonify({"response": response, "score": score})
+        # Respond with thank-you message only (no feedback shown to user)
+        return jsonify({"response": "Thank you for submitting your pitch!"})
     else:
         return jsonify({"error": "Something went wrong"}), 500
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     '''Render and process the login form.'''
     if request.method == "POST":
         email = request.form.get("email")
-        password = request.form.get("password")
 
-        if email and password:
+        if email:
             session["logged_in"] = True
             session["email"] = email
             return redirect(url_for("index"))
         else:
-            return render_template("login.html", error="Missing email or password!")
+            return render_template("login.html", error="Missing email!")
     return render_template("login.html")
 
 if __name__ == "__main__":

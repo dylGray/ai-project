@@ -76,16 +76,16 @@ def build_system_prompt():
 
         "If all required elements are present, proceed to return your evaluation in the following strict format:\n\n"
 
-        "When listing your evaluation for each required element, include a ✅ if the element is clearly present, or a ❌ if it is missing or weak. Place the icon directly next to the section title."
+        "When listing your evaluation for each required element, include a Y if the element is clearly present, or an N if it is missing or weak. Place the Y or N directly next to the section title.\n\n"
 
         "**Grade: X**\n\n"
-        "**Pain** ✅ or ❌\nYour detailed evaluation of how well the pitch describes the prospect's pain.\n\n"
-        "**Threat** ✅ or ❌\nYour detailed evaluation of the clarity and impact of the threat.\n\n"
-        "**Belief Statement** ✅ or ❌\nYour detailed evaluation of whether it starts correctly and focuses on the prospect.\n\n"
-        "**Relief** ✅ or ❌\nYour detailed evaluation of how well the solution is presented without listing features.\n\n"
-        "**Tone** ✅ or ❌\nYour evaluation of the language's emotional resonance and clarity.\n\n"
-        "**Length** ✅ or ❌\nYour evaluation regarding whether the pitch fits within the ideal word count.\n\n"
-        "**Clarity** ✅ or ❌\nYour evaluation on how easily the pitch could be spoken aloud.\n\n"
+        "**Pain** Y or N\nYour detailed evaluation of how well the pitch describes the prospect's pain.\n\n"
+        "**Threat** Y or N\nYour detailed evaluation of the clarity and impact of the threat.\n\n"
+        "**Belief Statement** Y or N\nYour detailed evaluation of whether it starts correctly and focuses on the prospect.\n\n"
+        "**Relief** Y or N\nYour detailed evaluation of how well the solution is presented without listing features.\n\n"
+        "**Tone** Y or N\nYour evaluation of the language's emotional resonance and clarity.\n\n"
+        "**Length** Y or N\nYour evaluation regarding whether the pitch fits within the ideal word count.\n\n"
+        "**Clarity** Y or N\nYour evaluation on how easily the pitch could be spoken aloud.\n\n"
 
         "Always:\n"
         "- Use a harsh grading scale; if there are any deviations from the guidelines, penalize accordingly.\n"

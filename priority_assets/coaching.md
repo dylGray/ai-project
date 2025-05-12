@@ -4,7 +4,7 @@ This document supports coaching users through the creation of a Priority Pitch a
 
 ## Coaching Objectives
 - Help users understand the WHY behind each pitch element.
-- Guide users to rethink weak or misaligned answers to the 8 foundational questions.
+- Guide users to rethink weak or misaligned answers to the 7 foundational questions.
 - Prompt deeper insights through strategic follow-up questions.
 - Align user-submitted content with the Priority Pitch Framework.
 

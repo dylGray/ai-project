@@ -31,33 +31,31 @@ def extract_structured_feedback(raw_feedback):
 
     for line in raw_feedback.splitlines():
         line = line.strip()
+
+        # reset current section on blank lines
         if not line:
+            current_key = None
             continue
 
-        # Detect feedback section headers like "Pain ✅" or "Belief Statement ❌"
-        match = re.match(r"^(Pain|Threat|Belief Statement|Relief|Tone|Length|Clarity)\s[✅❌]?", line)
+        # match headers like "Pain Y" or "Relief N"
+        match = re.match(r"^(Pain|Threat|Belief Statement|Relief|Tone|Length|Clarity)\s[Y|N]", line)
         if match:
             current_key = match.group(1)
             continue
 
-        # Skip Grade line
         if line.startswith("Grade:"):
             continue
 
-        if current_key:
-            if sections[current_key]:
-                sections[current_key] += " " + line
-            else:
-                sections[current_key] = line
+        if current_key in sections:
+            sections[current_key] += (" " if sections[current_key] else "") + line
         else:
-            # Anything outside of known headers goes to "Summary"
-            sections["Summary"] += " " + line
+            sections["Summary"] += (" " if sections["Summary"] else "") + line
 
-    # Clean up
     for key in sections:
         sections[key] = sections[key].strip()
 
     return sections
+
 
 def save_submission(email, pitch, score, feedback):
     domain = get_domain(email)
@@ -71,7 +69,7 @@ def save_submission(email, pitch, score, feedback):
         "feedback": structured_feedback
     }
 
-    # Load existing or initialize
+    # load existing or initialize
     if os.path.exists(file_path):
         with open(file_path, 'r') as f:
             try:
