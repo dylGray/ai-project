@@ -5,9 +5,16 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 
 # === FIREBASE INITIALIZATION ===
-# Only initialize once (helpful for dev reloads)
 if not firebase_admin._apps:
-    cred = credentials.Certificate("credentials/firebase-adminsdk.json")
+    firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
+
+    if firebase_json:
+        print("🔐 Using Firebase credentials from environment variable")
+        cred = credentials.Certificate(json.loads(firebase_json))
+    else:
+        print("🗂️ Using local Firebase credentials file")
+        cred = credentials.Certificate("credentials/firebase-adminsdk.json")
+
     firebase_admin.initialize_app(cred)
 
 db = firestore.client()
