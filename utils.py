@@ -11,8 +11,7 @@ if not firebase_admin._apps:
     if firebase_json:
         print("🔐 Using Firebase credentials from environment variable")
 
-        # Fix newlines in private_key for Firebase to parse it correctly
-        parsed_json = json.loads(firebase_json.replace('\\n', '\n'))
+        parsed_json = json.loads(firebase_json)  # 👈 use as-is, no replace
 
         cred = credentials.Certificate(parsed_json)
     else:
