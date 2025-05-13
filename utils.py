@@ -4,8 +4,6 @@ import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# test
-
 # === FIREBASE INITIALIZATION ===
 # Only initialize once (helpful for dev reloads)
 if not firebase_admin._apps:
