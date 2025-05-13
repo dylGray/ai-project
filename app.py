@@ -18,38 +18,41 @@ def index():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    '''Handle the chat interaction between user and AI model.'''
+    '''Handle submission of user query'''
+    print("📨 /chat route hit")
+
     if not session.get("logged_in"):
         return jsonify({"error": "Unauthorized"}), 401
 
     email = session.get("email")
     user_message = request.json.get("message")
+
+    print("📥 Message received:", user_message)
+
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
 
-    messages = [
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": user_message}
-    ]
+    try:
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_message}
+        ]
 
-    response = get_completion_from_messages(messages)
-
-    if response:
-        # print("[DEBUG] Full model response:\n", response, flush=True)
+        response = get_completion_from_messages(messages)
+        print("🧠 OpenAI response:", response)
 
         match = re.search(r"Grade:\s*(.*)", response)
         score = match.group(1).strip() if match else None
+        print("📊 Score:", score)
 
-        # print(f"[DEBUG] Extracted score: {score}", flush=True)
+        save_submission(email, user_message, score or "N/A", response)
+        print("✅ Submission saved")
 
-        if score:
-            save_submission(email, user_message, score, response)
-
-        # Respond with thank-you message only (no feedback shown to user)
         return jsonify({"response": "Thank you for submitting your pitch!"})
-    else:
-        return jsonify({"error": "Something went wrong"}), 500
-
+    
+    except Exception as e:
+        print("🔥 ERROR in /chat route:", e)
+        return jsonify({"error": "Internal Server Error"}), 500
 
 @app.route("/login", methods=["GET", "POST"])
 def login():

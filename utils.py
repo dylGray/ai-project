@@ -1,19 +1,24 @@
 import os
-import json
 import re
+import json
+import firebase_admin
+from firebase_admin import credentials, firestore
 
-DATA_DIR = 'data'
-os.makedirs(DATA_DIR, exist_ok=True)
+# === FIREBASE INITIALIZATION ===
+# Only initialize once (helpful for dev reloads)
+if not firebase_admin._apps:
+    cred = credentials.Certificate("credentials/firebase-adminsdk.json")
+    firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+# === DOMAIN + FEEDBACK HANDLING ===
 
 def get_domain(email):
     return email.split('@')[-1].lower().replace('.', '_')
 
-def get_file_path(domain):
-    filename = f"{domain}.json"
-    return os.path.join(DATA_DIR, filename)
-
 def extract_structured_feedback(raw_feedback):
-    # Remove markdown bold
+    # Clean up markdown
     raw_feedback = re.sub(r"\*\*(.*?)\*\*", r"\1", raw_feedback)
 
     sections = {
@@ -32,12 +37,10 @@ def extract_structured_feedback(raw_feedback):
     for line in raw_feedback.splitlines():
         line = line.strip()
 
-        # reset current section on blank lines
         if not line:
             current_key = None
             continue
 
-        # match headers like "Pain Y" or "Relief N"
         match = re.match(r"^(Pain|Threat|Belief Statement|Relief|Tone|Length|Clarity)\s[Y|N]", line)
         if match:
             current_key = match.group(1)
@@ -51,37 +54,22 @@ def extract_structured_feedback(raw_feedback):
         else:
             sections["Summary"] += (" " if sections["Summary"] else "") + line
 
-    for key in sections:
-        sections[key] = sections[key].strip()
+    return {k: v.strip() for k, v in sections.items()}
 
-    return sections
-
-
+# === FIRESTORE SAVE FUNCTION ===
 def save_submission(email, pitch, score, feedback):
     domain = get_domain(email)
-    file_path = get_file_path(domain)
     structured_feedback = extract_structured_feedback(feedback)
 
-    new_entry = {
+    entry = {
         "email": email,
         "pitch": pitch.strip(),
         "score": score,
         "feedback": structured_feedback
     }
 
-    # load existing or initialize
-    if os.path.exists(file_path):
-        with open(file_path, 'r') as f:
-            try:
-                data = json.load(f)
-            except json.JSONDecodeError:
-                data = []
-    else:
-        data = []
-
-    data.append(new_entry)
-
-    with open(file_path, 'w') as f:
-        json.dump(data, f, indent=2)
-
-    print(f"Saved submission to {file_path}", flush=True)
+    # Store in Firestore in a collection named after the domain
+    db.collection(domain).add(entry)
+    
+    print("✅ FIREBASE SAVE SUCCESSFUL")
+    print(f"Submitted for: {email} | Domain: {domain}")
