@@ -39,7 +39,7 @@ def chat():
         response = get_completion_from_messages(messages)
         print("OpenAI response:", response)
 
-        save_submission(email or "N/A", response)
+        save_submission(email or "N/A", user_message, response)
         print("Submission saved")
 
         return jsonify({"response": "Pitch submitted successfully! Your evaluation is securely stored and will help guide your future improvements."})

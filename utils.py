@@ -59,17 +59,18 @@ def extract_structured_feedback(raw_feedback):
     return {k: v.strip() for k, v in sections.items()}
 
 # === FIRESTORE SAVE FUNCTION ===
-def save_submission(email, feedback):
+def save_submission(email, pitch_text, feedback):
     domain = get_domain(email)
     structured_feedback = extract_structured_feedback(feedback)
 
     entry = {
         "email": email,
+        "pitch": pitch_text.strip(),
         "feedback": structured_feedback
     }
 
     # store in Firestore in a collection named after the domain
     db.collection(domain).add(entry)
     
-    print("✅ FIREBASE SAVE SUCCESSFUL")
+    print("FIREBASE SAVE SUCCESSFUL")
     print(f"Submitted for: {email} | Domain: {domain}")
