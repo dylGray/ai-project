@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session
 from model import build_system_prompt, get_completion_from_messages
 from utils import save_submission
-import re
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 

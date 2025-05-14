@@ -1,22 +1,18 @@
+'use strict';
+
 const chatBox = document.getElementById('chat-box');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 
-function formatResponse(text) {
-    // Replace Markdown-style bold with HTML <strong> tags
-    const bolded = text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
-    // Convert newlines to <br> tags
-    return bolded.replace(/\n/g, "<br>");
-}
-
 chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const userMessage = userInput.value;
+    const userMessage = userInput.value.trim();
+    if (!userMessage) return;
 
     chatBox.innerHTML += `
     <div class="text-right">
         <div class="text-left inline-block bg-blue-600 text-white px-4 py-2 rounded-lg">
-        ${userMessage}
+            ${userMessage}
         </div>
     </div>
     `;
@@ -26,28 +22,28 @@ chatForm.addEventListener('submit', async (e) => {
     const thinkingIndicator = document.createElement('div');
     thinkingIndicator.className = "text-left flex items-center space-x-2";
     thinkingIndicator.innerHTML = `
-    <div class="inline-block px-4 py-2 rounded-lg">
-        <div class="dot-flashing"></div>
-    </div>
+        <div class="inline-block px-4 py-2 rounded-lg text-neutral-400">
+            Submitting your pitch...
+        </div>
     `;
     chatBox.appendChild(thinkingIndicator);
     chatBox.scrollTop = chatBox.scrollHeight;
 
     const response = await fetch('/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: userMessage })
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: userMessage })
     });
-
-    const data = await response.json();
-    const aiReply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
 
     chatBox.removeChild(thinkingIndicator);
 
+    const data = await response.json();
+    const reply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
+
     chatBox.innerHTML += `
     <div class="text-left">
-        <div class="inline-block bg-neutral-700 text-white px-4 py-2 rounded-lg">
-        ${formatResponse(aiReply)}
+        <div class="inline-block bg-green-700 text-white px-4 py-2 rounded-lg">
+            ${reply}
         </div>
     </div>
     `;

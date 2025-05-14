@@ -12,7 +12,7 @@ client = OpenAI(api_key=api_key)
 
 def build_system_prompt():
     '''
-    Build the system prompt for the AI model by loading context and instructions from markdown and JSON files.
+    Build the system prompt for the AI model by loading context and instructions from markdown files.
 
     High-level overview:
     - Reads the Priority Pitch framework, grading criteria, coaching guidance, and prompt examples from local files.
@@ -41,13 +41,6 @@ def build_system_prompt():
     except Exception as e:
         coaching_md = ""
         print(f"Warning: Could not load coaching.md: {e}")
-        
-    # try:
-    #     with open("priority_assets/prompts.json", "r") as f:
-    #         prompts_json = f.read()
-    # except Exception as e:
-    #     prompts_json = ""
-    #     print(f"Warning: Could not load prompts.json: {e}")
 
     # build the prompt context by concatenating the files content
     context = (
@@ -58,8 +51,6 @@ def build_system_prompt():
         f"{grading_md}\n\n"
         "--- Coaching Guidance ---\n"
         f"{coaching_md}\n\n"
-        # "--- Follow-Up Prompt Examples ---\n"
-        # f"{prompts_json}\n\n"
     )
     
     instructions = (
