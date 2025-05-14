@@ -1,27 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Company Login</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login • Priority Pitch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
 </head>
-<body class="bg-neutral-900 text-white flex items-center justify-center min-h-screen">
-    <form action="/login" method="POST" class="bg-neutral-800 p-8 rounded-lg shadow-lg w-full max-w-md">
-        <h2 class="text-2xl font-bold mb-6 text-center">Sign In</h2>
-        <div class="mb-4">
-            <label for="email" class="block mb-2">Company Email</label>
-            <input type="email" id="email" name="email" required
-                class="w-full p-3 rounded bg-neutral-700 text-white placeholder:text-neutral-400 focus:outline-none" placeholder="you@company.com">
-        </div>
-        <!-- <div class="mb-6">
-            <label for="password" class="block mb-2">Password</label>
-            <input type="password" id="password" name="password" required
-                class="w-full p-3 rounded bg-neutral-700 text-white placeholder:text-neutral-400 focus:outline-none" placeholder="Your password">
-            <p class="mt-2 text-sm text-neutral-400">Note: Your password is only used within this system. Although it isn't critical for external authentication, please remember it to log back in later.</p>
-        </div> -->
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 p-3 rounded font-semibold">Login</button>
+<body class="bg-neutral-900 text-white flex items-center justify-center min-h-screen px-4">
+  <div class="w-full max-w-md">
+    <form action="/login" method="POST" class="bg-neutral-800 rounded-2xl shadow-xl p-8 space-y-6 animate-fade-in">
+      <div class="text-center">
+        <h1 class="text-3xl font-bold tracking-tight">Welcome!</h1>
+        <p class="text-sm text-neutral-400 mt-2">Sign in with your company email to get started.</p>
+      </div>
+
+      <div>
+        <label for="email" class="block text-sm font-medium mb-2">Company Email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          placeholder="you@company.com"
+          class="w-full px-4 py-3 rounded-lg bg-neutral-700 text-white placeholder:text-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <button
+        type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 transition-colors px-4 py-3 rounded-lg font-semibold text-white"
+      >
+        Sign In
+      </button>
     </form>
+
+    <p class="text-center text-xs text-neutral-500 mt-6">
+      © {{ current_year }} Priority Pitch. All rights reserved.
+    </p>
+  </div>
+
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.4s ease-out;
+    }
+  </style>
 </body>
 </html>

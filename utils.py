@@ -9,13 +9,13 @@ if not firebase_admin._apps:
     firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
 
     if firebase_json:
-        print("🔐 Using Firebase credentials from environment variable")
+        print("Using Firebase credentials from environment variable")
 
-        parsed_json = json.loads(firebase_json)  # 👈 use as-is, no replace
+        parsed_json = json.loads(firebase_json)  
 
         cred = credentials.Certificate(parsed_json)
     else:
-        print("🗂️ Using local Firebase credentials file")
+        print("Using local Firebase credentials file")
         cred = credentials.Certificate("credentials/firebase-adminsdk.json")
 
     firebase_admin.initialize_app(cred)
@@ -28,7 +28,7 @@ def get_domain(email):
     return email.split('@')[-1].lower().replace('.', '_')
 
 def extract_structured_feedback(raw_feedback):
-    # Clean up markdown
+    # Remove markdown bold
     raw_feedback = re.sub(r"\*\*(.*?)\*\*", r"\1", raw_feedback)
 
     sections = {
@@ -38,47 +38,37 @@ def extract_structured_feedback(raw_feedback):
         "Relief": "",
         "Tone": "",
         "Length": "",
-        "Clarity": "",
-        "Summary": ""
+        "Clarity": ""
     }
 
     current_key = None
 
     for line in raw_feedback.splitlines():
         line = line.strip()
-
         if not line:
-            current_key = None
             continue
 
-        match = re.match(r"^(Pain|Threat|Belief Statement|Relief|Tone|Length|Clarity)\s[Y|N]", line)
+        # Match the section title and extract initial content if available
+        match = re.match(r"^(Pain|Threat|Belief Statement|Relief|Tone|Length|Clarity)\s*(.*)", line)
         if match:
             current_key = match.group(1)
-            continue
-
-        if line.startswith("Grade:"):
-            continue
-
-        if current_key in sections:
-            sections[current_key] += (" " if sections[current_key] else "") + line
-        else:
-            sections["Summary"] += (" " if sections["Summary"] else "") + line
+            sections[current_key] = match.group(2).strip()
+        elif current_key:
+            sections[current_key] += " " + line
 
     return {k: v.strip() for k, v in sections.items()}
 
 # === FIRESTORE SAVE FUNCTION ===
-def save_submission(email, pitch, score, feedback):
+def save_submission(email, feedback):
     domain = get_domain(email)
     structured_feedback = extract_structured_feedback(feedback)
 
     entry = {
         "email": email,
-        "pitch": pitch.strip(),
-        "score": score,
         "feedback": structured_feedback
     }
 
-    # Store in Firestore in a collection named after the domain
+    # store in Firestore in a collection named after the domain
     db.collection(domain).add(entry)
     
     print("✅ FIREBASE SAVE SUCCESSFUL")

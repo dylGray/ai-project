@@ -3,8 +3,6 @@ from model import build_system_prompt, get_completion_from_messages
 from utils import save_submission
 import re
 
-# test
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 
 
@@ -21,15 +19,13 @@ def index():
 @app.route("/chat", methods=["POST"])
 def chat():
     '''Handle submission of user query'''
-    print("📨 /chat route hit")
-
     if not session.get("logged_in"):
         return jsonify({"error": "Unauthorized"}), 401
 
     email = session.get("email")
     user_message = request.json.get("message")
 
-    print("📥 Message received:", user_message)
+    print("Message received:", user_message)
 
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
@@ -41,19 +37,15 @@ def chat():
         ]
 
         response = get_completion_from_messages(messages)
-        print("🧠 OpenAI response:", response)
+        print("OpenAI response:", response)
 
-        match = re.search(r"Grade:\s*(.*)", response)
-        score = match.group(1).strip() if match else None
-        print("📊 Score:", score)
+        save_submission(email or "N/A", response)
+        print("Submission saved")
 
-        save_submission(email, user_message, score or "N/A", response)
-        print("✅ Submission saved")
-
-        return jsonify({"response": "Thank you for submitting your pitch!"})
+        return jsonify({"response": "Thank you for submitting your pitch! "})
     
     except Exception as e:
-        print("🔥 ERROR in /chat route:", e)
+        print("ERROR in /chat route:", e)
         return jsonify({"error": "Internal Server Error"}), 500
 
 @app.route("/login", methods=["GET", "POST"])

@@ -42,12 +42,12 @@ def build_system_prompt():
         coaching_md = ""
         print(f"Warning: Could not load coaching.md: {e}")
         
-    try:
-        with open("priority_assets/prompts.json", "r") as f:
-            prompts_json = f.read()
-    except Exception as e:
-        prompts_json = ""
-        print(f"Warning: Could not load prompts.json: {e}")
+    # try:
+    #     with open("priority_assets/prompts.json", "r") as f:
+    #         prompts_json = f.read()
+    # except Exception as e:
+    #     prompts_json = ""
+    #     print(f"Warning: Could not load prompts.json: {e}")
 
     # build the prompt context by concatenating the files content
     context = (
@@ -58,41 +58,25 @@ def build_system_prompt():
         f"{grading_md}\n\n"
         "--- Coaching Guidance ---\n"
         f"{coaching_md}\n\n"
-        "--- Follow-Up Prompt Examples ---\n"
-        f"{prompts_json}\n\n"
+        # "--- Follow-Up Prompt Examples ---\n"
+        # f"{prompts_json}\n\n"
     )
     
     instructions = (
-        "You are a professional AI assistant trained to evaluate Priority Pitches. When a user submits a Priority Pitch, "
-        "evaluate it rigorously using the Priority Pitch Framework, Grading Criteria, and Coaching Guidance provided. "
-        "Keep in mind that most pitches will not meet the criteria; therefore, be strict in your grading and clear in your feedback.\n\n"
+        "You are an AI assistant trained to rigorously evaluate elevator pitches "
+        "based on the framework, grading criteria, and examples provided above.\n\n"
+        "Each pitch must be graded using the following categories:\n"
+        "Pain, Threat, Belief Statement, Relief, Tone, Length, and Clarity.\n\n"
+        "For each category, indicate 'Y' if it is clearly and effectively present, or 'N' if it is missing or weak. "
+        "Follow this format exactly:\n\n"
 
-        "First, analyze the user's pitch and identify which of the following required elements are present: "
-        "Pain, Threat, Belief Statement, Relief, Tone, Length, and Clarity. "
-        "List the elements that are present in the pitch, and then clearly state which elements are missing.\n\n"
-
-        "If any required elements are missing, inform the user exactly which ones are missing and explain that a full and accurate grade cannot be given until all required elements are included. "
-        "Encourage the user to revise their pitch to include the missing elements for a complete assessment.\n\n"
-
-        "If all required elements are present, proceed to return your evaluation in the following strict format:\n\n"
-
-        "When listing your evaluation for each required element, include a Y if the element is clearly present, or an N if it is missing or weak. Place the Y or N directly next to the section title.\n\n"
-
-        "**Grade: X**\n\n"
-        "**Pain** Y or N\nYour detailed evaluation of how well the pitch describes the prospect's pain.\n\n"
-        "**Threat** Y or N\nYour detailed evaluation of the clarity and impact of the threat.\n\n"
-        "**Belief Statement** Y or N\nYour detailed evaluation of whether it starts correctly and focuses on the prospect.\n\n"
-        "**Relief** Y or N\nYour detailed evaluation of how well the solution is presented without listing features.\n\n"
-        "**Tone** Y or N\nYour evaluation of the language's emotional resonance and clarity.\n\n"
-        "**Length** Y or N\nYour evaluation regarding whether the pitch fits within the ideal word count.\n\n"
-        "**Clarity** Y or N\nYour evaluation on how easily the pitch could be spoken aloud.\n\n"
-
-        "Always:\n"
-        "- Use a harsh grading scale; if there are any deviations from the guidelines, penalize accordingly.\n"
-        "- Start with the grade on its own line, formatted as **Grade: X**.\n"
-        "- Include a blank line after the grade.\n"
-        "- Separate each evaluation section with a blank line. Do not group multiple sections into a single paragraph.\n"
-        "- Do not provide a revised pitch unless explicitly asked.\n"
+        "**Pain** Your detailed evaluation of how well the pitch describes the prospect's pain.\n\n"
+        "**Threat** Your detailed evaluation of the clarity and impact of the threat.\n\n"
+        "**Belief Statement** Your detailed evaluation of whether it starts correctly and focuses on the prospect.\n\n"
+        "**Relief** Your detailed evaluation of how well the solution is presented without listing features.\n\n"
+        "**Tone** Your evaluation of the language's emotional resonance and clarity.\n\n"
+        "**Length** Your evaluation regarding whether the pitch fits within the ideal word count.\n\n"
+        "**Clarity** Your evaluation on how easily the pitch could be spoken aloud.\n\n"
     )
 
     return context + instructions
