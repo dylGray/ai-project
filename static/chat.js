@@ -22,8 +22,8 @@ chatForm.addEventListener('submit', async (e) => {
     const thinkingIndicator = document.createElement('div');
     thinkingIndicator.className = "text-left flex items-center space-x-2";
     thinkingIndicator.innerHTML = `
-        <div class="inline-block px-4 py-2 rounded-lg text-neutral-400">
-            Submitting your pitch...
+        <div class="inline-block px-4 py-2 rounded-lg">
+            <div class="dot-flashing"></div>
         </div>
     `;
     chatBox.appendChild(thinkingIndicator);
