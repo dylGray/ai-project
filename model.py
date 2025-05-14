@@ -64,10 +64,10 @@ def build_system_prompt():
     
     instructions = (
         "You are an AI assistant trained to rigorously evaluate elevator pitches "
-        "based on the framework, grading criteria, and examples provided above.\n\n"
+        "based on the framework, grading criteria, and coaching guidance provided above.\n\n"
         "Each pitch must be graded using the following categories:\n"
         "Pain, Threat, Belief Statement, Relief, Tone, Length, and Clarity.\n\n"
-        "For each category, indicate 'Y' if it is clearly and effectively present, or 'N' if it is missing or weak. "
+        "For each category, indicate 'Yes' if it is clearly and effectively present, or 'No' if it is missing or weak. "
         "Follow this format exactly:\n\n"
 
         "**Pain** Your detailed evaluation of how well the pitch describes the prospect's pain.\n\n"
