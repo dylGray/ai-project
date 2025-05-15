@@ -14,17 +14,20 @@ system_prompt = build_system_prompt()
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    '''Render and process the login form.'''
     if request.method == "POST":
         email = request.form.get("email")
+        print("Login email received:", email)
 
         if email:
             session["logged_in"] = True
             session["email"] = email
-            return redirect(url_for("index"))
+            print("Session after login:", dict(session))  # ✅ Add this line
+            return render_template("index.html", is_admin=(email in admin_emails), debug_email=email, debug_admin=(email in admin_emails))
         else:
             return render_template("login.html", error="Missing email!")
+
     return render_template("login.html")
+
 
 @app.route("/")
 def index():
@@ -34,7 +37,6 @@ def index():
     email = session.get("email")
     is_admin = email in admin_emails
 
-    # Pass session email and admin status to template
     return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin)
 
 @app.route("/chat", methods=["POST"])
