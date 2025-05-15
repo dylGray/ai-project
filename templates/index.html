@@ -11,11 +11,14 @@
 <body class="bg-neutral-900 text-white h-screen flex flex-col items-center px-4">
 
 
-  <div class="text-xs text-yellow-400 p-3">
-    Debug: email={{ debug_email }} | is_admin={{ debug_admin }}<br>
-    Admin list: {{ debug_admin_list }}<br>
-    <pre>{{ debug_all_env | safe }}</pre>
+  <div class="bg-red-800 text-white text-sm p-4 rounded-lg mt-4">
+    <strong>Debug Info</strong><br>
+    Logged in as: <code>{{ debug_email }}</code><br>
+    is_admin: <code>{{ debug_admin }}</code><br>
+    Parsed admin_emails list:<br>
+    <pre class="whitespace-pre-wrap">{{ debug_admin_list }}</pre>
   </div>
+
 
   <div class="hidden md:flex gap-3 absolute top-6 left-6">
     <a href="/login" 

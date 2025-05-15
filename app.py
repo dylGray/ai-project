@@ -15,6 +15,8 @@ admin_emails = [
     if e.strip()
 ]
 
+print("ADMIN EMAILS LOADED:", admin_emails)
+
 # System prompt
 system_prompt = build_system_prompt()
 
@@ -34,9 +36,17 @@ def index():
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
-    email = session.get("email", "").strip().lower()  # Normalize again
+    email = session.get("email", "").strip().lower()
     is_admin = email in admin_emails
-    return render_template("index.html", is_admin=is_admin)
+
+    return render_template(
+        "index.html",
+        is_admin=is_admin,
+        debug_email=email,
+        debug_admin=is_admin,
+        debug_admin_list=admin_emails  
+    )
+
 
 @app.route("/chat", methods=["POST"])
 def chat():
