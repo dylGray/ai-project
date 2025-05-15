@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login • Priority Pitch</title>
+  <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
 </head>
@@ -11,8 +11,8 @@
   <div class="w-full max-w-md">
     <form action="/login" method="POST" class="bg-neutral-800 rounded-2xl shadow-xl p-8 space-y-6 animate-fade-in">
       <div class="text-center">
+        <img src="{{ url_for('static', filename='images/tps-logo.webp') }}" alt="Priority Pitch Logo" class="mx-auto mt-5 mb-5 w-10 h-10" />
         <h1 class="text-3xl font-bold tracking-tight">Welcome!</h1>
-        <img src="{{ url_for('static', filename='images/tps-logo.webp') }}" alt="Priority Pitch Logo" class="mx-auto mt-2 w-20 h-20" />
         <p class="text-sm text-neutral-400 mt-2">Sign in with your company email to get started.</p>
       </div>
 

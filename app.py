@@ -41,7 +41,7 @@ def chat():
         save_submission(email or "N/A", user_message, response)
         print("Submission saved")
 
-        return jsonify({"response": "Pitch submitted successfully! Your evaluation is securely stored and will help guide your future improvements."})
+        return jsonify({"response": "Pitch submitted! Your evaluation is securely stored within our system."})
     
     except Exception as e:
         print("ERROR in /chat route:", e)

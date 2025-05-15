@@ -10,12 +10,12 @@ chatForm.addEventListener('submit', async (e) => {
     if (!userMessage) return;
 
     chatBox.innerHTML += `
-    <div class="text-right">
-        <div class="text-left inline-block bg-blue-600 text-white px-4 py-2 rounded-lg">
-            ${userMessage}
+        <div class="flex items-start space-x-2">
+            <div class="text-2xl">👤</div>
+            <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl">${userMessage}</div>
         </div>
-    </div>
     `;
+
     userInput.value = '';
     chatBox.scrollTop = chatBox.scrollHeight;
 
@@ -41,11 +41,11 @@ chatForm.addEventListener('submit', async (e) => {
     const reply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
 
     chatBox.innerHTML += `
-    <div class="text-left">
-        <div class="inline-block bg-green-700 text-white px-4 py-2 rounded-lg">
-            ${reply}
+        <div class="flex items-start space-x-2">
+            <div class="text-2xl">🤖</div>
+            <div class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl">${reply}</div>
         </div>
-    </div>
     `;
+
     chatBox.scrollTop = chatBox.scrollHeight;
 });
