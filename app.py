@@ -8,26 +8,32 @@ import os
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback")
 
-admin_emails = os.getenv("ADMIN_EMAILS", "").split(",")
+admin_emails = [
+    email.strip().lower()
+    for email in os.getenv("ADMIN_EMAILS", "").split(",")
+    if email.strip()
+]
+
+print("Loaded admin emails:", admin_emails)
 
 system_prompt = build_system_prompt()
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email")
+        email = request.form.get("email", "").strip().lower()
         print("Login email received:", email)
 
         if email:
             session["logged_in"] = True
             session["email"] = email
-            print("Session after login:", dict(session))  # ✅ Add this line
-            return render_template("index.html", is_admin=(email in admin_emails), debug_email=email, debug_admin=(email in admin_emails))
-        else:
-            return render_template("login.html", error="Missing email!")
+            print("Session after login:", dict(session))
+            is_admin = email in admin_emails
+            print("Is admin at login:", is_admin)
+
+            return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin)
 
     return render_template("login.html")
-
 
 @app.route("/")
 def index():
