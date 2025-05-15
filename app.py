@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
-from flask_session import Session
 from model import build_system_prompt, get_completion_from_messages
 from utils import save_submission, fetch_all_submissions
 from io import StringIO
@@ -8,14 +7,6 @@ import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 
-
-# Flask-Session config for Vercel
-app.config["SESSION_TYPE"] = "cookie"  # REQUIRED for serverless platforms
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_USE_SIGNER"] = True
-app.config["SESSION_COOKIE_SECURE"] = True  # set False if you're using HTTP in dev
-
-Session(app)
 
 admin_emails = os.getenv("ADMIN_EMAILS", "").split(",")
 
