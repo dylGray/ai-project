@@ -9,13 +9,13 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 
 
-# Flask-Session setup
-app.config["SESSION_TYPE"] = "filesystem"  # 'filesystem' is simple and works even on Vercel deployments
+# Flask-Session config for Vercel
+app.config["SESSION_TYPE"] = "cookie"  # REQUIRED for serverless platforms
 app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_USE_SIGNER"] = True  # adds extra protection
-app.config["SESSION_COOKIE_SECURE"] = True  # only over HTTPS
+app.config["SESSION_USE_SIGNER"] = True
+app.config["SESSION_COOKIE_SECURE"] = True  # set False if you're using HTTP in dev
 
-Session(app)  # bind the session management to the app
+Session(app)
 
 admin_emails = os.getenv("ADMIN_EMAILS", "").split(",")
 
