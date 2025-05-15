@@ -1,4 +1,5 @@
 flask
+Flask-Session
 openai
 python-dotenv
 firebase-admin

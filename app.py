@@ -1,14 +1,22 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
+from flask_session import Session
 from model import build_system_prompt, get_completion_from_messages
 from utils import save_submission, fetch_all_submissions
 from io import StringIO
 import csv
 import os
 
-# test
-
 app = Flask(__name__)
 app.secret_key = 'your_secret_key' 
+
+# Flask-Session setup
+app.config["SESSION_TYPE"] = "filesystem"  # 'filesystem' is simple and works even on Vercel deployments
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_USE_SIGNER"] = True  # adds extra protection
+app.config["SESSION_COOKIE_SECURE"] = True  # only over HTTPS
+
+Session(app)  # bind the session management to the app
+
 admin_emails = os.getenv("ADMIN_EMAILS", "").split(",")
 
 system_prompt = build_system_prompt()
