@@ -1,6 +1,9 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
 from model import build_system_prompt, get_completion_from_messages
 from utils import save_submission, fetch_all_submissions
+from dotenv import load_dotenv
+load_dotenv
+
 from io import StringIO
 import csv
 import os
@@ -8,13 +11,9 @@ import os
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback")
 
-admin_emails = [
-    email.strip().lower()
-    for email in os.getenv("ADMIN_EMAILS", "").split(",")
-    if email.strip()
-]
+admin_emails = [email.strip().lower() for email in os.getenv("ADMIN_EMAILS", "").split(",") if email.strip()]
+print("Loaded admin emails:", admin_emails)  # TEMP: for confirmation
 
-print("Loaded admin emails:", admin_emails)
 
 system_prompt = build_system_prompt()
 
