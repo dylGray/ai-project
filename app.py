@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
-from model import build_system_prompt, get_completion_from_messages
-from utils import save_submission, fetch_all_submissions, is_valid_pitch
+from model import build_system_prompt, get_completion_from_messages, is_valid_pitch
+from utils import save_submission, fetch_all_submissions
 from io import StringIO
 import os
 import csv
