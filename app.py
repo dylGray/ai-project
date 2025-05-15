@@ -10,9 +10,9 @@ app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
 
 admin_emails = [
-    email.strip().lower()
-    for email in os.getenv("ADMIN_EMAILS", "").split(",")
-    if email.strip()
+    e.strip().lower()
+    for e in os.getenv("ADMIN_EMAILS", "").split(",")
+    if e.strip()
 ]
 
 # System prompt
@@ -21,13 +21,11 @@ system_prompt = build_system_prompt()
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-
-        if email:
-            session["logged_in"] = True
-            session["email"] = email
-            is_admin = email in admin_emails
-            return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin)
+        email = request.form.get("email", "").strip().lower()  # Normalize email
+        session["logged_in"] = True
+        session["email"] = email
+        is_admin = email in admin_emails
+        return render_template("index.html", is_admin=is_admin)
 
     return render_template("login.html")
 
@@ -36,11 +34,9 @@ def index():
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
-    email = session.get("email")
-    email = email.strip().lower() if email else ""
+    email = session.get("email", "").strip().lower()  # Normalize again
     is_admin = email in admin_emails
-
-    return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin)
+    return render_template("index.html", is_admin=is_admin)
 
 @app.route("/chat", methods=["POST"])
 def chat():
