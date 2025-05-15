@@ -73,7 +73,7 @@ def build_system_prompt():
     return context + instructions
 
 def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
-    '''Call OpenAI API to interact with the pre-trained AI model.'''
+    '''Calls OpenAI API to interact with the pre-trained AI model.'''
     try:
         response = client.chat.completions.create(
             model=model,

@@ -5,25 +5,24 @@ from io import StringIO
 import os
 import csv
 
-# Initialize Flask
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
 
 admin_emails = [
-    e.strip().lower()
-    for e in os.getenv("ADMIN_EMAILS", "").split(",")
-    if e.strip()
+    email.strip().lower()
+    for email in os.getenv("ADMIN_EMAILS", "").split(",")
+    if email.strip()
 ]
 
 print("ADMIN EMAILS LOADED:", admin_emails)
 
-# System prompt
 system_prompt = build_system_prompt()
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    '''Route for allowing users and admins to login'''
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()  # Normalize email
+        email = request.form.get("email", "").strip().lower()  
         session["logged_in"] = True
         session["email"] = email
         is_admin = email in admin_emails
@@ -33,6 +32,7 @@ def login():
 
 @app.route("/")
 def index():
+    '''Route to redirect users to index.html after login'''
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
@@ -47,9 +47,9 @@ def index():
         debug_admin_list=admin_emails  
     )
 
-
 @app.route("/chat", methods=["POST"])
 def chat():
+    '''Route for users to interact with AI model'''
     if not session.get("logged_in"):
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -76,6 +76,7 @@ def chat():
 
 @app.route("/download")
 def download_data():
+    '''Route to allow admins to download user submitted pitches'''
     email = session.get("email", "").strip().lower()
     if email not in admin_emails:
         return redirect(url_for("index"))
