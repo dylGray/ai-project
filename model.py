@@ -85,3 +85,35 @@ def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_t
     except Exception as e:
         print(f"Error fetching completion: {e}")
         return None
+
+def is_valid_pitch(user_input):
+    '''
+    Uses GPT to decide if the message resembles an elevator pitch.
+    Returns True if it seems like a pitch; False if it's just a greeting, question, etc.
+    '''
+    try:
+        check_prompt = [
+            {
+                "role": "system",
+                "content": (
+                    "You are a strict classifier that only answers 'Yes' or 'No'. "
+                    "Say 'Yes' if the input appears to be an attempt at an elevator pitch, even if incomplete. "
+                    "Say 'No' if it’s just a greeting, question, or something unrelated."
+                )
+            },
+            {"role": "user", "content": user_input}
+        ]
+
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=check_prompt,
+            temperature=0,
+            max_tokens=1,
+        )
+
+        result = response.choices[0].message.content.strip().lower()
+        return result == "yes"
+
+    except Exception as e:
+        print("Error during pitch classification:", e)
+        return True  # default to allowing if uncertain

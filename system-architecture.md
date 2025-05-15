@@ -9,7 +9,7 @@ User --> ChatRoute[POST /chat → app.py/]
 User --> DownloadRoute (ADMINS ONLY) [/download → app.py/]
 
 %% === LOGIN FLOW ===
-LoginRoute --> SetSession[Set session['email']]
+LoginRoute --> SetSession[session['email']]
 SetSession --> CheckAdminLogin[Check if email is in admin_emails]
 CheckAdminLogin --> RenderIndexLogin[Render index.html with is_admin flag]
 
@@ -31,9 +31,8 @@ FetchSubmissions --> FormatCSV[Generate CSV from Firestore data]
 FormatCSV --> ReturnDownload[Send CSV file to admin]
 
 %% === ENV CONFIG ===
-subgraph 🔧 Environment Variables
-    EnvVars[ADMIN_EMAILS, SECRET_KEY, OPENAI_API_KEY, FIREBASE_SERVICE_ACCOUNT_JSON]
-end
+Environment Variables
+EnvVars[ADMIN_EMAILS, SECRET_KEY, OPENAI_API_KEY, FIREBASE_SERVICE_ACCOUNT_JSON]
 EnvVars --> app.py
 EnvVars --> model.py
 EnvVars --> utils.py

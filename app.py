@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
 from model import build_system_prompt, get_completion_from_messages
-from utils import save_submission, fetch_all_submissions
+from utils import save_submission, fetch_all_submissions, is_valid_pitch
 from io import StringIO
 import os
 import csv
@@ -13,8 +13,6 @@ admin_emails = [
     for email in os.getenv("ADMIN_EMAILS", "").split(",")
     if email.strip()
 ]
-
-print("ADMIN EMAILS LOADED:", admin_emails)
 
 system_prompt = build_system_prompt()
 
@@ -60,6 +58,14 @@ def chat():
         return jsonify({"error": "No message provided"}), 400
 
     try:
+        warning_prefix = ""
+        if not is_valid_pitch(user_message):
+            warning_prefix = (
+                "This doesn’t look like a complete elevator pitch. "
+                "If that was intentional, no problem — I’ll still evaluate it. "
+                "But for best results, include pain, threat, belief, and relief.\n\n"
+            )
+
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": user_message}
@@ -68,7 +74,10 @@ def chat():
         response = get_completion_from_messages(messages)
         save_submission(email or "N/A", user_message, response)
 
-        return jsonify({"response": "Pitch submitted! It's being evaluated by the AI, trained on the Priority Pitch methodology."})
+        return jsonify({
+            "response": warning_prefix +
+                        "Pitch submitted! It's being evaluated by the AI, trained on the Priority Pitch methodology."
+        })
 
     except Exception as e:
         print("ERROR in /chat route:", e)
