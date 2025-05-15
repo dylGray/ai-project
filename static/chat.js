@@ -10,10 +10,10 @@ chatForm.addEventListener('submit', async (e) => {
     if (!userMessage) return;
 
     chatBox.innerHTML += `
-        <div class="flex items-start space-x-2">
-            <div class="text-2xl">👤</div>
-            <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl">${userMessage}</div>
-        </div>
+    <div class="flex items-start justify-end space-x-2 space-x-reverse">
+        <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl text-left">${userMessage}</div>
+        <div class="text-2xl">👤</div>
+    </div>
     `;
 
     userInput.value = '';
