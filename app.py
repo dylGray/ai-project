@@ -41,9 +41,14 @@ def index():
         return redirect(url_for("login"))
 
     email = session.get("email")
+    email = email.strip().lower() if email else ""
     is_admin = email in admin_emails
 
-    return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin)
+    print("Session email:", email)
+    print("Loaded admin emails:", admin_emails)
+    print("Is admin:", is_admin)
+
+    return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin, debug_admin_list=admin_emails)
 
 @app.route("/chat", methods=["POST"])
 def chat():

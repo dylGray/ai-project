@@ -10,9 +10,11 @@
 </head> 
 <body class="bg-neutral-900 text-white h-screen flex flex-col items-center px-4">
 
-  <div class="text-xs text-left text-green-400 absolute top-0 right-0 p-3">
-    Debug: email={{ debug_email }} | is_admin={{ debug_admin }}
+  <div class="text-xs text-red-400 absolute top-0 left-0 p-3">
+    Debug: email={{ debug_email }} | is_admin={{ debug_admin }} <br>
+    Admin list: {{ debug_admin_list }}
   </div>
+
 
   <div class="hidden md:flex gap-3 absolute top-6 left-6">
     <a href="/login" 
