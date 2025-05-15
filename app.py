@@ -48,8 +48,13 @@ def index():
     admin_emails_raw = os.getenv("ADMIN_EMAILS", "NOT FOUND")
     print("RAW ENV VALUE FOR ADMIN_EMAILS:", admin_emails_raw)
 
-    admin_emails = [e.strip().lower() for e in admin_emails_raw.split(",") if e.strip()]
-    is_admin = email.strip().lower() in admin_emails if email else False
+    # Temporary hardcoded admin list to bypass broken env on Vercel
+    admin_emails = [
+        "dylan.gray@revenuepathgroup.com",
+        "jesse.laffen@revenuepathgroup.com",
+        "bryan.gray@revenuepathgroup.com",
+        "joe.wiekert@revenuepathgroup.com"
+    ]
 
     return render_template("index.html",
         is_admin=is_admin,
