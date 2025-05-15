@@ -40,14 +40,24 @@ def index():
         return redirect(url_for("login"))
 
     email = session.get("email")
-    email = email.strip().lower() if email else ""
-    is_admin = email in admin_emails
+    is_admin = False
 
-    print("Session email:", email)
-    print("Loaded admin emails:", admin_emails)
-    print("Is admin:", is_admin)
+    # Print all environment variables to the debug UI
+    all_env = dict(os.environ)
 
-    return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin, debug_admin_list=admin_emails)
+    admin_emails_raw = os.getenv("ADMIN_EMAILS", "NOT FOUND")
+    print("RAW ENV VALUE FOR ADMIN_EMAILS:", admin_emails_raw)
+
+    admin_emails = [e.strip().lower() for e in admin_emails_raw.split(",") if e.strip()]
+    is_admin = email.strip().lower() in admin_emails if email else False
+
+    return render_template("index.html",
+        is_admin=is_admin,
+        debug_email=email,
+        debug_admin=is_admin,
+        debug_admin_list=admin_emails,
+        debug_all_env=all_env
+    )
 
 @app.route("/chat", methods=["POST"])
 def chat():
