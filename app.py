@@ -28,21 +28,14 @@ def login():
 
 @app.route("/")
 def index():
-    '''Handle the chat interface.'''
-    print("=== / INDEX ROUTE ===")
-    print("Session contents:", dict(session))
-    print("ADMIN_EMAILS:", admin_emails)
-
     if not session.get("logged_in"):
-        print("Not logged in, redirecting.")
         return redirect(url_for("login"))
 
     email = session.get("email")
-    print("Email from session:", email)
     is_admin = email in admin_emails
-    print("Is admin:", is_admin)
 
-    return render_template("index.html", is_admin=is_admin)
+    # Pass session email and admin status to template
+    return render_template("index.html", is_admin=is_admin, debug_email=email, debug_admin=is_admin)
 
 @app.route("/chat", methods=["POST"])
 def chat():
