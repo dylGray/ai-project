@@ -4,7 +4,6 @@ import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# === FIREBASE INITIALIZATION ===
 if not firebase_admin._apps:
     firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
 
@@ -22,13 +21,12 @@ if not firebase_admin._apps:
 
 db = firestore.client()
 
-# === DOMAIN + FEEDBACK HANDLING ===
-
 def get_domain(email):
+    '''Grabs domain of logged in users email'''
     return email.split('@')[-1].lower().replace('.', '_')
 
 def extract_structured_feedback(raw_feedback):
-    # Remove markdown bold
+    '''Extracts the AI models evaluation of a user submitted pitch'''
     raw_feedback = re.sub(r"\*\*(.*?)\*\*", r"\1", raw_feedback)
 
     sections = {
@@ -48,7 +46,6 @@ def extract_structured_feedback(raw_feedback):
         if not line:
             continue
 
-        # Match the section title and extract initial content if available
         match = re.match(r"^(Pain|Threat|Belief Statement|Relief|Tone|Length|Clarity)\s*(.*)", line)
         if match:
             current_key = match.group(1)
@@ -58,8 +55,8 @@ def extract_structured_feedback(raw_feedback):
 
     return {k: v.strip() for k, v in sections.items()}
 
-# === FIRESTORE SAVE FUNCTION ===
 def save_submission(email, pitch_text, feedback):
+    '''Saves email, users submitted pitch, and AI evaluation feedback'''
     domain = get_domain(email)
     structured_feedback = extract_structured_feedback(feedback)
 
@@ -74,3 +71,25 @@ def save_submission(email, pitch_text, feedback):
     
     print("FIREBASE SAVE SUCCESSFUL")
     print(f"Submitted for: {email} | Domain: {domain}")
+
+def fetch_all_submissions():
+    '''Grabs all submissions stored in Firestore DB'''
+
+    all_data = []
+
+    # we can limit to certain collections like ['revenuepathgroup_com'] or dynamically fetch all
+    # docs = db.collection("revenuepathgroup_com").stream()
+    # for doc in docs:
+    #     ...
+
+    collections = db.collections()
+
+    for col in collections:
+        try:
+            for doc in col.stream():
+                data = doc.to_dict()
+                all_data.append(data)
+        except Exception as e:
+            print(f"Error reading from collection {col.id}: {e}")
+
+    return all_data
