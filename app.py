@@ -19,17 +19,16 @@ system_prompt = build_system_prompt()
 @app.route("/login", methods=["GET", "POST"])
 def login():
     '''Handles user and admin login.'''
-        
+
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()  
+        email = request.form.get("email", "").strip().lower()
         session["logged_in"] = True
         session["email"] = email
-        is_admin = email in admin_emails
-        return render_template("index.html", is_admin=is_admin)
+        return redirect(url_for("index")) 
 
     return render_template("login.html")
 
-@app.route("/")
+@app.route("/chat")
 def index():
     '''Renders main application landing page.'''
         
