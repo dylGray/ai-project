@@ -1,0 +1,50 @@
+overview:
+  description: >
+    A Priority Pitch is a concise pitch (100–150 words, max 170) that presents:
+    - The prospect as the protagonist
+    - A threat as the antagonist
+    - The seller’s solution as the hero
+
+core_principles:
+  narrative_perspective: "Second person (\"you\")"
+  reading_level: "3rd to 6th grade (ideal: 4th–5th)"
+  delivery_style: "Natural when spoken aloud"
+  tone: "Conversational, clear, emotionally engaging"
+
+components:
+  - name: "Pain"
+    description: >
+      Describe the prospect’s daily frustrations in their role.
+      Must be emotional, tangible, and specific — not generic.
+      Sets up why change is needed.
+
+  - name: "Threat"
+    description: >
+      Reveal the deeper business consequence tied to the pain.
+      Should feel urgent and strategic.
+      Answers the question: “So what?”
+
+  - name: "Belief Statement"
+    description: >
+      Builds trust by aligning with the prospect’s worldview.
+      Must start with “We believe you…” and focus on the prospect.
+
+  - name: "Relief"
+    description: >
+      Describes how your solution addresses the threat.
+      Avoid listing features; focus on strategic outcome and value.
+
+  - name: "Tone"
+    description: >
+      Simple, human, emotionally engaging.
+      Avoid jargon and robotic phrasing.
+
+  - name: "Length"
+    description: >
+      Ideal: 100–150 words. Max: 170.
+      Concise and to the point, no fluff.
+
+  - name: "Clarity"
+    description: >
+      Must be easy to say aloud.
+      Avoid awkward phrasing or run-ons.

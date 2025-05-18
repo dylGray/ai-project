@@ -3,6 +3,8 @@ import re
 import json
 import firebase_admin
 from firebase_admin import credentials, firestore
+from datetime import datetime
+from google.cloud.firestore_v1 import SERVER_TIMESTAMP
 
 if not firebase_admin._apps:
     firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
@@ -22,11 +24,11 @@ if not firebase_admin._apps:
 db = firestore.client()
 
 def get_domain(email):
-    '''Grabs domain of logged in users email'''
+    '''Grabs domain of logged in users email.'''
     return email.split('@')[-1].lower().replace('.', '_')
 
 def extract_structured_feedback(raw_feedback):
-    '''Extracts the AI models evaluation of a user submitted pitch'''
+    '''Extracts the AI models evaluation of a user submitted pitch.'''
     raw_feedback = re.sub(r"\*\*(.*?)\*\*", r"\1", raw_feedback)
 
     sections = {
@@ -56,14 +58,15 @@ def extract_structured_feedback(raw_feedback):
     return {k: v.strip() for k, v in sections.items()}
 
 def save_submission(email, pitch_text, feedback):
-    '''Saves email, users submitted pitch, and AI evaluation feedback'''
+    '''Saves email, users submitted pitch, and AI evaluation feedback.'''
     domain = get_domain(email)
     structured_feedback = extract_structured_feedback(feedback)
 
     entry = {
         "email": email,
         "pitch": pitch_text.strip(),
-        "feedback": structured_feedback
+        "feedback": structured_feedback,
+        "submitted_at": firestore.SERVER_TIMESTAMP
     }
 
     # store in Firestore in a collection named after the domain
@@ -73,14 +76,9 @@ def save_submission(email, pitch_text, feedback):
     print(f"Submitted for: {email} | Domain: {domain}")
 
 def fetch_all_submissions():
-    '''Grabs all submissions stored in Firestore DB'''
+    '''Grabs all submissions stored in Firestore DB.'''
 
     all_data = []
-
-    # we can limit to certain collections like ['revenuepathgroup_com'] or dynamically fetch all
-    # docs = db.collection("revenuepathgroup_com").stream()
-    # for doc in docs:
-    #     ...
 
     collections = db.collections()
 

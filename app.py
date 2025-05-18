@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
 from model import build_system_prompt, get_completion_from_messages, is_valid_pitch
-from utils import save_submission, fetch_all_submissions
+from firestore import save_submission, fetch_all_submissions
 from io import StringIO
 import os
 import csv
@@ -18,7 +18,8 @@ system_prompt = build_system_prompt()
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    '''Route for allowing users and admins to login'''
+    '''Handles user and admin login.'''
+        
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()  
         session["logged_in"] = True
@@ -30,7 +31,8 @@ def login():
 
 @app.route("/")
 def index():
-    '''Route to redirect users to index.html after login'''
+    '''Renders main application landing page.'''
+        
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
@@ -47,7 +49,8 @@ def index():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    '''Route for users to interact with AI model'''
+    '''Processes user pitch input.'''
+
     if not session.get("logged_in"):
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -59,12 +62,16 @@ def chat():
 
     try:
         warning_prefix = ""
-        if not is_valid_pitch(user_message):
-            warning_prefix = (
-                "This doesn’t look like a complete elevator pitch. "
-                "If that was intentional, no problem — I’ll still evaluate it. "
-                "But for best results, include pain, threat, belief, and relief.\n\n"
-            )
+        classification = is_valid_pitch(user_message)
+
+        if not classification["is_pitch"]:
+            return jsonify({
+                "response": (
+                    f"It looks like you sent a {classification['reason'].lower()} — totally fine!\n"
+                    "This tool is built to evaluate elevator pitches using the Priority Pitch method. "
+                    "Try describing a high-pressure moment your customers face, and how you help them overcome it."
+                )
+            })
 
         messages = [
             {"role": "system", "content": system_prompt},
@@ -85,7 +92,8 @@ def chat():
 
 @app.route("/download")
 def download_data():
-    '''Route to allow admins to download user submitted pitches'''
+    '''Allows admin users to download all submitted pitches and evaluations as CSV.'''
+
     email = session.get("email", "").strip().lower()
     if email not in admin_emails:
         return redirect(url_for("index"))
@@ -93,11 +101,16 @@ def download_data():
     all_submissions = fetch_all_submissions()
 
     output = StringIO()
+    output.write('\ufeff')  # <- UTF-8 BOM for Excel
+
     writer = csv.writer(output)
-    writer.writerow(["Email", "Pitch", "Pain", "Threat", "Belief Statement", "Relief", "Tone", "Length", "Clarity"])
+    writer.writerow(["Email", "Pitch", "Pain", "Threat", "Belief Statement", "Relief", "Tone", "Length", "Clarity", "Submitted At"])
 
     for entry in all_submissions:
         fb = entry.get("feedback", {})
+        timestamp = entry.get("submitted_at")
+        ts_str = timestamp.isoformat() if timestamp else ""
+
         writer.writerow([
             entry.get("email", ""),
             entry.get("pitch", ""),
@@ -107,7 +120,8 @@ def download_data():
             fb.get("Relief", ""),
             fb.get("Tone", ""),
             fb.get("Length", ""),
-            fb.get("Clarity", "")
+            fb.get("Clarity", ""),
+            ts_str
         ])
 
     output.seek(0)

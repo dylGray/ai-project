@@ -1,4 +1,6 @@
 import os
+import json
+import yaml
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -10,70 +12,61 @@ if not api_key:
 
 client = OpenAI(api_key=api_key)
 
+
 def build_system_prompt():
     '''
-    Build the system prompt for the AI model by loading context and instructions from markdown files.
+    Builds an efficient, structured system prompt from YAML files.
 
-    High-level overview:
-    - Reads the Priority Pitch framework, grading criteria, coaching guidance, and prompt examples from local files.
-    - Concatenates the contents into a single string (context) to provide the model with all necessary background and rules.
-    - Appends strict instructions on how to evaluate, grade, and give feedback on user-submitted pitches.
-    - Returns the full prompt string, which is sent as the "system" message to the OpenAI API.
+    - Loads framework principles and grading criteria from YAML files
+    - Minimizes token usage while retaining clarity and structure
+    - Returns prompt string for injection into OpenAI API
     '''
-    
-    try:
-        with open("priority_assets/framework.md", "r") as f:
-            framework_md = f.read()
-    except Exception as e:
-        framework_md = ""
-        print(f"Warning: Could not load framework.md: {e}")
-        
-    try:
-        with open("priority_assets/grading.md", "r") as f:
-            grading_md = f.read()
-    except Exception as e:
-        grading_md = ""
-        print(f"Warning: Could not load grading.md: {e}")
-        
-    try:
-        with open("priority_assets/coaching.md", "r") as f:
-            coaching_md = f.read()
-    except Exception as e:
-        coaching_md = ""
-        print(f"Warning: Could not load coaching.md: {e}")
 
-    # build the prompt context by concatenating the files content
-    context = (
-        "Priority Pitch Context:\n\n"
-        "--- Framework ---\n"
-        f"{framework_md}\n\n"
-        "--- Grading Criteria ---\n"
-        f"{grading_md}\n\n"
-        "--- Coaching Guidance ---\n"
-        f"{coaching_md}\n\n"
-    )
-    
-    instructions = (
-        "You are an AI assistant trained to rigorously evaluate elevator pitches "
-        "based on the framework, grading criteria, and coaching guidance provided above.\n\n"
-        "Each pitch must be graded using the following categories:\n"
-        "Pain, Threat, Belief Statement, Relief, Tone, Length, and Clarity.\n\n"
-        "For each category, indicate 'Yes' if it is clearly and effectively present, or 'No' if it is missing or weak. "
-        "Follow this format exactly:\n\n"
+    try:
+        with open("priority_assets/framework.yaml", "r") as f:
+            framework = yaml.safe_load(f)
+    except Exception as e:
+        print(f"Warning: Could not load framework.yaml: {e}")
+        framework = {}
 
-        "**Pain** Your detailed evaluation of how well the pitch describes the prospect's pain.\n\n"
-        "**Threat** Your detailed evaluation of the clarity and impact of the threat.\n\n"
-        "**Belief Statement** Your detailed evaluation of whether it starts correctly and focuses on the prospect.\n\n"
-        "**Relief** Your detailed evaluation of how well the solution is presented without listing features.\n\n"
-        "**Tone** Your evaluation of the language's emotional resonance and clarity.\n\n"
-        "**Length** Your evaluation regarding whether the pitch fits within the ideal word count.\n\n"
-        "**Clarity** Your evaluation on how easily the pitch could be spoken aloud.\n\n"
-    )
+    try:
+        with open("priority_assets/grading.yaml", "r") as f:
+            grading = yaml.safe_load(f)
+    except Exception as e:
+        print(f"Warning: Could not load grading.yaml: {e}")
+        grading = {}
 
-    return context + instructions
+    # Build prompt
+    lines = []
+
+    lines.append("You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.\n")
+
+    lines.append("== Framework Overview ==")
+    lines.append(framework.get("overview", {}).get("description", ""))
+
+    lines.append("\n== Core Principles ==")
+    for key, value in framework.get("core_principles", {}).items():
+        lines.append(f"- {key.replace('_', ' ').title()}: {value}")
+
+    lines.append("\n== Required Components ==")
+    for comp in framework.get("components", []):
+        lines.append(f"- {comp['name']}: {comp['description']}")
+
+    lines.append("\n== Evaluation Criteria ==")
+    for criterion in grading.get("criteria", []):
+        lines.append(f"{criterion['name']}: {criterion['signal']}")
+        lines.append(f"Example: {criterion['example']}\n")
+
+    lines.append("Respond in this exact format:\n")
+    for criterion in grading.get("criteria", []):
+        lines.append(f"**{criterion['name']}** Your detailed evaluation")
+
+    return "\n".join(lines)
+
 
 def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
-    '''Calls OpenAI API to interact with the pre-trained AI model.'''
+    '''Sends a prompt and message history to OpenAI's GPT model to get a generated completion.'''
+
     try:
         response = client.chat.completions.create(
             model=model,
@@ -86,34 +79,35 @@ def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_t
         print(f"Error fetching completion: {e}")
         return None
 
+
 def is_valid_pitch(user_input):
-    '''
-    Uses GPT to decide if the message resembles an elevator pitch.
-    Returns True if it seems like a pitch; False if it's just a greeting, question, etc.
-    '''
+    '''Classifies user input as either a pitch or non-pitch.'''
+
+    classification_prompt = [
+        {
+            "role": "system",
+            "content": (
+                "You are a classifier that determines whether a user's message is:\n"
+                "(A) an elevator pitch, or\n"
+                "(B) something else like a greeting, small talk, question, or irrelevant message.\n\n"
+                "Respond in this exact JSON format:\n"
+                '{"is_pitch": true|false, "reason": "Greeting|SmallTalk|Question|Joke|PitchLike|Empty|Other"}\n\n'
+                "Examples:\n"
+                'Input: "Who am I speaking with?" → {"is_pitch": false, "reason": "Question"}\n'
+                'Input: "Our customers are struggling to keep up with demand..." → {"is_pitch": true, "reason": "PitchLike"}'
+            )
+        },
+        {"role": "user", "content": user_input}
+    ]
+
     try:
-        check_prompt = [
-            {
-                "role": "system",
-                "content": (
-                    "You are a strict classifier that only answers 'Yes' or 'No'. "
-                    "Say 'Yes' if the input appears to be an attempt at an elevator pitch, even if incomplete. "
-                    "Say 'No' if it’s just a greeting, question, or something unrelated."
-                )
-            },
-            {"role": "user", "content": user_input}
-        ]
-
         response = client.chat.completions.create(
-            model="gpt-4",
-            messages=check_prompt,
+            model="gpt-3.5-turbo-0125",
+            messages=classification_prompt,
             temperature=0,
-            max_tokens=1,
+            max_tokens=50,
         )
-
-        result = response.choices[0].message.content.strip().lower()
-        return result == "yes"
-
+        return json.loads(response.choices[0].message.content.strip())
     except Exception as e:
-        print("Error during pitch classification:", e)
-        return True  # default to allowing if uncertain
+        print("Error during input classification:", e)
+        return {"is_pitch": True, "reason": "Fallback"}

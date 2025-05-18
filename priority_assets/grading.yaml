@@ -1,0 +1,33 @@
+criteria:
+  - name: "Pain"
+    signal: "Specific, emotional frustration the prospect experiences in their role"
+    example: "Your reps are exhausted from chasing dead-end leads."
+
+  - name: "Threat"
+    signal: "Strategic risk or consequence resulting from the pain"
+    example: "That burnout is costing you deals — and you're losing top performers as a result."
+
+  - name: "Belief Statement"
+    signal: "Starts with 'We believe you...', focuses on prospect, not seller"
+    example: "We believe you deserve better access to the right deals — not just more activity."
+
+  - name: "Relief"
+    signal: "Solution to the threat, not just a list of features"
+    example: "We help teams engage decision-makers earlier, so reps win more — without burning out."
+
+  - name: "Tone"
+    signal: "Clear, emotional, conversational, at a 3rd–6th grade level"
+    example: "Short sentences, active voice, empathetic tone."
+
+  - name: "Length"
+    signal: "100–150 words, max 170; concise and complete"
+    example: "Avoids repetition and over-explaining."
+
+  - name: "Clarity"
+    signal: "Easily speakable aloud, natural phrasing"
+    example: "Flows conversationally and avoids complex transitions."
+
+evaluation_notes:
+  - "All 7 elements are required."
+  - "Grade strictly for structure, clarity, and alignment."
+  - "Do not offer revision guidance or encouragement."
