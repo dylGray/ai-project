@@ -16,6 +16,10 @@ admin_emails = [
 
 system_prompt = build_system_prompt()
 
+@app.route("/")
+def root():
+    return redirect(url_for("login"))
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     '''Handles user and admin login.'''
