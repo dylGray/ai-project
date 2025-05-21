@@ -1,5 +1,4 @@
 # Priority Pitch for RPG
-## Currently in development
 
 - **Frontend**: HTML, TailwindCSS, JavaScript
 - **Backend**: Flask (Python)
