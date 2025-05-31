@@ -23,7 +23,6 @@ chatForm.addEventListener('submit', async (e) => {
         instructions.style.display = 'none';
     }
 
-
     chatBox.scrollTop = chatBox.scrollHeight;
 
     const thinkingIndicator = document.createElement('div');

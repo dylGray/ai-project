@@ -1,5 +1,10 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
-from model import build_system_prompt, get_completion_from_messages, is_valid_pitch
+from model import (
+    build_system_prompt,
+    build_fallback_system_prompt,
+    get_completion_from_messages,
+    is_valid_pitch
+)
 from firestore import save_submission, fetch_all_submissions
 from io import StringIO
 import os
@@ -15,6 +20,7 @@ admin_emails = [
 ]
 
 system_prompt = build_system_prompt()
+fallback_system_prompt = build_fallback_system_prompt()
 
 @app.route("/")
 def root():
@@ -52,41 +58,56 @@ def index():
 
 @app.route("/chat", methods=["POST"])
 def chat():
-    '''Processes user pitch input.'''
+    '''Processes user pitch input OR gives a conversational fallback.'''
 
     if not session.get("logged_in"):
         return jsonify({"error": "Unauthorized"}), 401
 
-    email = session.get("email")
-    user_message = request.json.get("message")
+    email = session.get("email", "").strip().lower()
+    user_message = request.json.get("message", "")
 
     if not user_message:
         return jsonify({"error": "No message provided"}), 400
 
     try:
-        warning_prefix = ""
         classification = is_valid_pitch(user_message)
 
-        if not classification["is_pitch"]:
-            return jsonify({
-                "response": (
-                    f"It looks like you sent a {classification['reason'].lower()} — totally fine!\n"
-                    "This tool is built to evaluate elevator pitches using the Priority Pitch method. "
-                    "Try describing a high-pressure moment your customers face, and how you help them overcome it."
-                )
-            })
+        # ─── CASE A: Not a pitch → Send to GPT with the fallback prompt ───
+        if not classification.get("is_pitch", False):
+            # Build a tiny chat history with our fallback system prompt
+            fallback_messages = [
+                {"role": "system", "content": fallback_system_prompt},
+                {"role": "user",   "content": user_message}
+            ]
 
+            # Call GPT so it can answer/engage and then remind them to pitch
+            fallback_response = get_completion_from_messages(
+                messages=fallback_messages,
+                model="gpt-4",        # or "gpt-3.5-turbo", whichever you prefer
+                temperature=0.7,      # slightly higher temp for a friendlier tone
+                max_tokens=400        # enough room for chatty reply + reminder
+            )
+
+            # Return whatever GPT generates
+            return jsonify({"response": fallback_response})
+
+        # ─── CASE B: It's a pitch → Proceed with your normal evaluation flow ───
         messages = [
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message}
+            {"role": "user",   "content": user_message}
         ]
 
-        response = get_completion_from_messages(messages)
-        save_submission(email or "N/A", user_message, response)
+        ai_feedback = get_completion_from_messages(
+            messages=messages,
+            model="gpt-4",     # your evaluation model
+            temperature=0.4,   # keep it deterministic for grading
+            max_tokens=500
+        )
+
+        save_submission(email or "N/A", user_message, ai_feedback)
 
         return jsonify({
-            "response": warning_prefix +
-                        "Pitch submitted! It's being evaluated by the AI, trained on the Priority Pitch methodology."
+            "response": "Pitch submitted! It's being evaluated by the AI, trained on the Priority Pitch methodology."
         })
 
     except Exception as e:
