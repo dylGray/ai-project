@@ -1,135 +1,131 @@
-from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
-from model import build_system_prompt, get_completion_from_messages, is_valid_pitch
-from firestore import save_submission, fetch_all_submissions
-from io import StringIO
 import os
-import csv
+import json
+import yaml
+from dotenv import load_dotenv
+from openai import OpenAI
 
-app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
+load_dotenv()
+api_key = os.getenv("OPENAI_API_KEY")
 
-admin_emails = [
-    email.strip().lower()
-    for email in os.getenv("ADMIN_EMAILS", "").split(",")
-    if email.strip()
-]
+if not api_key:
+    raise ValueError("API Key not found. Check your .env file.")
 
-system_prompt = build_system_prompt()
+client = OpenAI(api_key=api_key)
 
-@app.route("/")
-def root():
-    return redirect(url_for("login"))
+def build_system_prompt():
+    '''
+    Builds an efficient, structured system prompt from YAML files.
 
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    '''Handles user and admin login.'''
-
-    if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        session["logged_in"] = True
-        session["email"] = email
-        return redirect(url_for("index")) 
-
-    return render_template("login.html")
-
-@app.route("/chat")
-def index():
-    '''Renders main application landing page.'''
-        
-    if not session.get("logged_in"):
-        return redirect(url_for("login"))
-
-    email = session.get("email", "").strip().lower()
-    is_admin = email in admin_emails
-
-    return render_template(
-        "index.html",
-        is_admin=is_admin,
-        debug_email=email,
-        debug_admin=is_admin,
-        debug_admin_list=admin_emails  
-    )
-
-@app.route("/chat", methods=["POST"])
-def chat():
-    '''Processes user pitch input.'''
-
-    if not session.get("logged_in"):
-        return jsonify({"error": "Unauthorized"}), 401
-
-    email = session.get("email")
-    user_message = request.json.get("message")
-
-    if not user_message:
-        return jsonify({"error": "No message provided"}), 400
+    - Loads framework principles and grading criteria from YAML files
+    - Minimizes token usage while retaining clarity and structure
+    - Returns prompt string for injection into OpenAI API
+    '''
 
     try:
-        warning_prefix = ""
-        classification = is_valid_pitch(user_message)
-
-        if not classification["is_pitch"]:
-            return jsonify({
-                "response": (
-                    f"It looks like you sent a {classification['reason'].lower()} — totally fine!\n"
-                    "This tool is built to evaluate elevator pitches using the Priority Pitch method. "
-                    "Try describing a high-pressure moment your customers face, and how you help them overcome it."
-                )
-            })
-
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_message}
-        ]
-
-        response = get_completion_from_messages(messages)
-        save_submission(email or "N/A", user_message, response)
-
-        return jsonify({
-            "response": warning_prefix +
-                        "Pitch submitted! It's being evaluated by the AI, trained on the Priority Pitch methodology."
-        })
-
+        with open("priority_assets/framework.yaml", "r") as f:
+            framework = yaml.safe_load(f)
     except Exception as e:
-        print("ERROR in /chat route:", e)
-        return jsonify({"error": "Internal Server Error"}), 500
+        print(f"Warning: Could not load framework.yaml: {e}")
+        framework = {}
 
-@app.route("/download")
-def download_data():
-    '''Allows admin users to download all submitted pitches and evaluations as CSV.'''
+    try:
+        with open("priority_assets/grading.yaml", "r") as f:
+            grading = yaml.safe_load(f)
+    except Exception as e:
+        print(f"Warning: Could not load grading.yaml: {e}")
+        grading = {}
 
-    email = session.get("email", "").strip().lower()
-    if email not in admin_emails:
-        return redirect(url_for("index"))
+    # Build prompt
+    lines = []
 
-    all_submissions = fetch_all_submissions()
+    lines.append("You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.\n")
 
-    output = StringIO()
-    output.write('\ufeff')  # <- UTF-8 BOM for Excel
+    lines.append("== Framework Overview ==")
+    lines.append(framework.get("overview", {}).get("description", ""))
 
-    writer = csv.writer(output)
-    writer.writerow(["Email", "Pitch", "Pain", "Threat", "Belief Statement", "Relief", "Tone", "Length", "Clarity", "Submitted At"])
+    lines.append("\n== Core Principles ==")
+    for key, value in framework.get("core_principles", {}).items():
+        lines.append(f"- {key.replace('_', ' ').title()}: {value}")
 
-    for entry in all_submissions:
-        fb = entry.get("feedback", {})
-        timestamp = entry.get("submitted_at")
-        ts_str = timestamp.isoformat() if timestamp else ""
+    lines.append("\n== Required Components ==")
+    for comp in framework.get("components", []):
+        lines.append(f"- {comp['name']}: {comp['description']}")
 
-        writer.writerow([
-            entry.get("email", ""),
-            entry.get("pitch", ""),
-            fb.get("Pain", ""),
-            fb.get("Threat", ""),
-            fb.get("Belief Statement", ""),
-            fb.get("Relief", ""),
-            fb.get("Tone", ""),
-            fb.get("Length", ""),
-            fb.get("Clarity", ""),
-            ts_str
-        ])
+    lines.append("\n== Evaluation Criteria ==")
+    for criterion in grading.get("criteria", []):
+        lines.append(f"{criterion['name']}: {criterion['signal']}")
+        lines.append(f"Example: {criterion['example']}\n")
 
-    output.seek(0)
-    return Response(output, mimetype="text/csv",
-                    headers={"Content-Disposition": "attachment;filename=priority_pitch_data.csv"})
+    lines.append("Respond in this exact format:\n")
+    for criterion in grading.get("criteria", []):
+        lines.append(f"**{criterion['name']}** Your detailed evaluation")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+    return "\n".join(lines)
+
+def build_fallback_system_prompt():
+    """
+    This fallback prompt is used whenever the user message is NOT detected as a pitch.
+    The AI should:
+      1. Answer the user’s question / greeting / small-talk naturally.
+      2. Then politely remind them that this is an elevator-pitch grading tool,
+         and invite them to share an actual pitch.
+    """
+    lines = [
+        "You are a friendly, conversational assistant. "
+        "Your job is twofold:\n"
+        "  1. If the user is asking a question or just chatting, respond normally—"
+        "     answer their question, engage in small talk, or be helpful.\n"
+        "  2. At the end of your response, once you have addressed the user’s actual message, "
+        "softly remind them that this tool’s main purpose is to evaluate elevator pitches. "
+        "For example: “By the way, this app is built to evaluate elevator pitches using the Priority Pitch method. "
+        "Whenever you’re ready, share your pitch and I’ll grade it.”\n\n"
+        "Be warm and natural. Do not lecture or judge; simply answer and then funnel them back.\n"
+    ]
+    return "\n".join(lines)
+
+def is_valid_pitch(user_input):
+    '''Classifies user input as either a pitch or non-pitch.'''
+
+    classification_prompt = [
+        {
+            "role": "system",
+            "content": (
+                "You are a classifier that determines whether a user's message is:\n"
+                "(A) an elevator pitch, or\n"
+                "(B) something else like a greeting, small talk, question, or irrelevant message.\n\n"
+                "Respond in this exact JSON format:\n"
+                '{"is_pitch": true|false, "reason": "Greeting|SmallTalk|Question|Joke|PitchLike|Empty|Other"}\n\n'
+                "Examples:\n"
+                'Input: "Who am I speaking with?" → {"is_pitch": false, "reason": "Question"}\n'
+                'Input: "Our customers are struggling to keep up with demand..." → {"is_pitch": true, "reason": "PitchLike"}'
+            )
+        },
+        {"role": "user", "content": user_input}
+    ]
+
+    try:
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            messages=classification_prompt,
+            temperature=0,
+            max_tokens=50,
+        )
+        return json.loads(response.choices[0].message.content.strip())
+    except Exception as e:
+        print("Error during input classification:", e)
+        return {"is_pitch": True, "reason": "Fallback"}
+
+def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
+    '''Sends a prompt and message history to OpenAI's GPT model to get a generated completion.'''
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error fetching completion: {e}")
+        return None

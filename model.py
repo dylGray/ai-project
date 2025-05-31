@@ -12,8 +12,6 @@ if not api_key:
 
 client = OpenAI(api_key=api_key)
 
-# test
-
 def build_system_prompt():
     '''
     Builds an efficient, structured system prompt from YAML files.
@@ -64,22 +62,26 @@ def build_system_prompt():
 
     return "\n".join(lines)
 
-
-def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
-    '''Sends a prompt and message history to OpenAI's GPT model to get a generated completion.'''
-
-    try:
-        response = client.chat.completions.create(
-            model=model,
-            messages=messages,
-            temperature=temperature,
-            max_tokens=max_tokens
-        )
-        return response.choices[0].message.content
-    except Exception as e:
-        print(f"Error fetching completion: {e}")
-        return None
-
+def build_fallback_system_prompt():
+    """
+    This fallback prompt is used whenever the user message is NOT detected as a pitch.
+    The AI should:
+      1. Answer the user’s question / greeting / small-talk naturally.
+      2. Then politely remind them that this is an elevator-pitch grading tool,
+         and invite them to share an actual pitch.
+    """
+    lines = [
+        "You are a friendly, conversational assistant. "
+        "Your job is twofold:\n"
+        "  1. If the user is asking a question or just chatting, respond normally—"
+        "     answer their question, engage in small talk, or be helpful.\n"
+        "  2. At the end of your response, once you have addressed the user’s actual message, "
+        "softly remind them that this tool’s main purpose is to evaluate elevator pitches. "
+        "For example: “By the way, this app is built to evaluate elevator pitches using the Priority Pitch method. "
+        "Whenever you’re ready, share your pitch and I’ll grade it.”\n\n"
+        "Be warm and natural. Do not lecture or judge; simply answer and then funnel them back.\n"
+    ]
+    return "\n".join(lines)
 
 def is_valid_pitch(user_input):
     '''Classifies user input as either a pitch or non-pitch.'''
@@ -112,3 +114,18 @@ def is_valid_pitch(user_input):
     except Exception as e:
         print("Error during input classification:", e)
         return {"is_pitch": True, "reason": "Fallback"}
+
+def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
+    '''Sends a prompt and message history to OpenAI's GPT model to get a generated completion.'''
+
+    try:
+        response = client.chat.completions.create(
+            model=model,
+            messages=messages,
+            temperature=temperature,
+            max_tokens=max_tokens
+        )
+        return response.choices[0].message.content
+    except Exception as e:
+        print(f"Error fetching completion: {e}")
+        return None
