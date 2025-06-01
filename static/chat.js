@@ -1,19 +1,32 @@
 'use strict';
 
+const chatContainer = document.getElementById('chat-container');
 const chatBox = document.getElementById('chat-box');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
+
+chatContainer.classList.remove('bg-neutral-800');
+
+// store the “normal” form classes to restore after first submit
+const normalFormClasses = "mt-4 flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-14";
 
 chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const userMessage = userInput.value.trim();
     if (!userMessage) return;
 
+    // if this is the very first message, unhide the chat window and reposition the form
+    if (chatBox.classList.contains('hidden')) {
+        chatBox.classList.remove('hidden');
+        chatForm.className = normalFormClasses;
+        chatContainer.classList.add('bg-neutral-800');
+    }
+
     chatBox.innerHTML += `
-    <div class="flex items-start justify-end space-x-2 space-x-reverse">
+      <div class="flex items-start justify-end space-x-2 space-x-reverse">
         <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl text-left">${userMessage}</div>
         <i style="margin: 2.5px -5px 0 7.5px;" class="fa-solid fa-user"></i>
-    </div>
+      </div>
     `;
 
     userInput.value = '';
@@ -23,19 +36,20 @@ chatForm.addEventListener('submit', async (e) => {
         instructions.style.display = 'none';
     }
 
-
     chatBox.scrollTop = chatBox.scrollHeight;
 
+    // “thinking” indicator
     const thinkingIndicator = document.createElement('div');
     thinkingIndicator.className = "text-left flex items-center space-x-2";
     thinkingIndicator.innerHTML = `
-        <div class="inline-block px-4 py-2 rounded-lg">
-            <div class="dot-flashing"></div>
-        </div>
+      <div class="inline-block px-4 py-2 rounded-lg">
+        <div class="dot-flashing"></div>
+      </div>
     `;
     chatBox.appendChild(thinkingIndicator);
     chatBox.scrollTop = chatBox.scrollHeight;
 
+    // send to backend
     const response = await fetch('/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -48,10 +62,10 @@ chatForm.addEventListener('submit', async (e) => {
     const reply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
 
     chatBox.innerHTML += `
-        <div class="flex items-start space-x-2">
-            <img src="/static/images/tps-logo.webp" alt="AI Logo" class="w-5 h-5 mt-2 rounded shadow-md" />
-            <div class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl">${reply}</div>
-        </div>
+      <div class="flex items-start space-x-2">
+        <img src="/static/images/tps-logo.webp" alt="AI Logo" class="w-5 h-5 mt-2 rounded shadow-md" />
+        <div class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl">${reply}</div>
+      </div>
     `;
 
     chatBox.scrollTop = chatBox.scrollHeight;

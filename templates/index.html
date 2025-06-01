@@ -24,41 +24,57 @@
     {% endif %}
   </div>
 
-  <div class="mt-6 md:mt-8 max-w-4xl w-full text-center">
+  <div class="mt-8 md:mt-16 max-w-4xl w-full text-center">
     <h1 class="text-2xl md:text-4xl font-extrabold text-white animate-fade-in">Elevator Pitch Challenge</h1>
+
+    <!-- Usage recommendation section -->
+    <div class="mt-2">
+      <p class="block md:hidden text-sm text-neutral-300">
+        For the best experience, please use this application on a laptop or desktop and ensure you have a clear microphone connected.
+      </p>
+    </div>
     
     <!-- Visible only on desktop -->
     <div>
       <p style="font-size: 17px;" class="hidden md:block mt-3 text-sm text-neutral-200">
         You’ve got 40 seconds to capture your prospect’s attention — will your pitch make them lean in or walk away?
       </p>
-      <p class="mt-2 text-xs italic text-neutral-400">
+      <p class="hidden md:block mt-2 text-xs italic text-neutral-400">
         Note: This tool does not provide immediate feedback. All submitted pitches are securely stored within the system for future analysis.
       </p>
     </div>
   </div>
 
-  <div class="flex flex-col flex-grow w-full max-w-4xl mt-6 md:mt-8 p-4 mb-4 bg-neutral-800 rounded-xl shadow-xl overflow-hidden">
-
-    <div id="chat-box" class="flex-1 overflow-y-auto p-4 bg-neutral-900 rounded-lg shadow-inner space-y-4">
+  <!-- CHAT CONTAINER -->
+  <div id="chat-container"
+       class="relative flex flex-col flex-grow w-full max-w-4xl mt-6 md:mt-8 p-4 mb-4 bg-neutral-800 rounded-xl shadow-xl overflow-hidden">
+    
+    <!-- CHAT BOX (hidden initially) -->
+    <div id="chat-box"
+         class="flex-1 overflow-y-auto p-4 bg-neutral-900 rounded-lg shadow-inner space-y-4 hidden">
       <!-- messages will be injected here -->
-      <div id="mobile-instructions" class="block md:hidden flex h-full items-center justify-center text-center text-sm text-neutral-200">
+      <div id="mobile-instructions"
+           class="block md:hidden flex h-full items-center justify-center text-center text-sm text-neutral-200">
         <div class="flex flex-col items-center justify-center space-y-2 max-w-sm mx-auto">
-          <p class="text-[15px] leading-tight">You’ve got 40 seconds to capture your prospect’s attention — will your pitch make them lean in or walk away?</p>
+          <p class="text-[15px] leading-tight">
+            You’ve got 40 seconds to capture your prospect’s attention — will your pitch make them lean in or walk away?
+          </p>
         </div>
       </div>
     </div>
 
-    <form id="chat-form" class="mt-4 flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-14">
+    <!-- CHAT INPUT FORM -->
+    <!-- Initially: centered via absolute/transform classes. After first submit, JS will swap these out -->
+    <form id="chat-form"
+          class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-14">
       <input 
         id="user-input" 
         type="text" 
         class="flex-grow h-full bg-transparent text-white placeholder-neutral-400 focus:outline-none px-3" 
         placeholder="Click the mic to start your pitch, click again to end your pitch..." 
-        required
       />
       <button 
-        type="button"
+        type="submit"
         id="mic-button"
         class="ml-3 w-11 h-11 flex items-center justify-center text-white hover:text-red-500 transition"
         aria-label="Start voice input"
