@@ -1,3 +1,4 @@
 .env
 run_dev.sh
 credentials/firebase-adminsdk.json
+venv/
