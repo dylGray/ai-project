@@ -78,7 +78,7 @@ def chat():
             fallback_response = get_completion_from_messages(
                 messages=fallback_messages,
                 model="gpt-4",       
-                temperature=0.7,      
+                temperature=0.6,      
                 max_tokens=400      
             )
 

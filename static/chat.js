@@ -21,8 +21,8 @@ chatForm.addEventListener('submit', async (e) => {
         chatBox.classList.remove('hidden');
         chatForm.className = normalFormClasses;
         chatContainer.classList.add('bg-neutral-800');
-        headText.classList.remove('mt-20', 'md:mt-40');
-        headText.classList.add('mt-10', 'md:mt-20');
+        headText.classList.remove('mt-24', 'md:mt-40');
+        headText.classList.add('mt-12', 'md:mt-20');
     }
 
     chatBox.innerHTML += `
@@ -81,7 +81,7 @@ chatForm.addEventListener('submit', async (e) => {
         outputDiv.innerHTML += reply[i] === '\n' ? '<br>' : reply[i];
         i++;
         chatBox.scrollTop = chatBox.scrollHeight;
-        setTimeout(typeWriter, 12); // Adjust speed as needed
+        setTimeout(typeWriter, 15); // adjust typing speed here
       }
     }
     typeWriter();
