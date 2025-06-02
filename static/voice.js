@@ -14,7 +14,10 @@ if ('webkitSpeechRecognition' in window) {
   let recognizing = false;
   let finalTranscript = ""; 
 
-  micButton.addEventListener("click", () => {
+  micButton.addEventListener("click", (event) => {
+    // only toggle mic if the click is a real mouse click (event.detail !== 0)
+    // this prevents Enter/Space from toggling the mic when the button is focused
+    if (event.detail === 0) return;
     if (!recognizing) {
       finalTranscript = ""; 
       recognition.start();

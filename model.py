@@ -21,19 +21,27 @@ def build_system_prompt():
     - Returns prompt string for injection into OpenAI API
     '''
 
+    # load YAML files (training material) with error handling
     try:
-        with open("priority_assets/framework.yaml", "r") as f:
+        with open("pitch_assets/framework.yaml", "r") as f:
             framework = yaml.safe_load(f)
     except Exception as e:
         print(f"Warning: Could not load framework.yaml: {e}")
         framework = {}
 
     try:
-        with open("priority_assets/grading.yaml", "r") as f:
+        with open("pitch_assets/grading.yaml", "r") as f:
             grading = yaml.safe_load(f)
     except Exception as e:
         print(f"Warning: Could not load grading.yaml: {e}")
         grading = {}
+
+    try:
+        with open("pitch_assets/examples.yaml", "r") as f:
+            examples = yaml.safe_load(f)
+    except Exception as e:
+        print(f"Warning: Could not load examples.yaml: {e}")
+        examples = {}
 
     # build prompt
     lines = []
@@ -55,6 +63,39 @@ def build_system_prompt():
     for criterion in grading.get("criteria", []):
         lines.append(f"{criterion['name']}: {criterion['signal']}")
         lines.append(f"Example: {criterion['example']}\n")
+
+    # inject good and bad examples form pitch_assests/examples.yaml
+    pitch_examples = examples.get("pitches", [])
+    good_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "") == "good"]
+    bad_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "") == "bad"]
+
+    if good_examples:
+        lines.append("\n== Good Elevator Pitch Example(s) ==")
+        for ex in good_examples:
+            lines.append(f"Title: {ex.get('title', '')}")
+            lines.append(f"Audience: {ex.get('audience', '')}")
+            lines.append(f"Pitch:\n{ex.get('content', '').strip()}")
+            strengths = ex.get('evaluation', {}).get('strengths', [])
+            if strengths:
+                lines.append("Strengths: " + "; ".join(strengths))
+            improvements = ex.get('evaluation', {}).get('improvements', [])
+            if improvements:
+                lines.append("Possible Improvements: " + "; ".join(improvements))
+            lines.append("")
+
+    if bad_examples:
+        lines.append("\n== Bad Elevator Pitch Example(s) ==")
+        for ex in bad_examples:
+            lines.append(f"Title: {ex.get('title', '')}")
+            lines.append(f"Audience: {ex.get('audience', '')}")
+            lines.append(f"Pitch:\n{ex.get('content', '').strip()}")
+            weaknesses = ex.get('evaluation', {}).get('weaknesses', [])
+            if weaknesses:
+                lines.append("Weaknesses: " + "; ".join(weaknesses))
+            improvements = ex.get('evaluation', {}).get('improvements', [])
+            if improvements:
+                lines.append("How to Improve: " + "; ".join(improvements))
+            lines.append("")
 
     lines.append("Respond in this exact format:\n")
     for criterion in grading.get("criteria", []):

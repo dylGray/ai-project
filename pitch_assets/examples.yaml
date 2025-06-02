@@ -1,0 +1,91 @@
+pitches:
+  - title: "Priority Sale Pitch to Executive"
+    audience: "High-level executive"
+    word_count: 153
+    reading_level: "6th grade"
+    content: |
+      Your business requires revenue. Hitting your goals is never easy. It certainly is costing a lot to do. And while you’re probably making sales, you might wonder if your sales team is doing a lot of high-value selling.
+
+      If not, you’re getting caught in the race to the bottom, where price is all that matters. That means smaller margins, tighter budgets and real questions about whether your business is viable for years to come.
+
+      We believe you deserve to work with customers who know and respect the value you give them. And when you do, your margins will grow.
+
+      The Priority Sale is designed to lift your team out of the race to the bottom. They will learn how to get into deals earlier, with real decision-makers who appreciate your value. With this approach, they will make higher-margin deals that grow your business. You’ll hit the goals you’ve set.
+    evaluation:
+      type: "good"
+      strengths:
+        - Follows pain/threat/belief/relief model
+        - Addresses the threat to business longevity
+        - Connects value-based selling to margin growth
+      improvements:
+        - Slightly too long (153 words)
+        - Reading level could be lowered for clarity
+    notes: "Still acceptable as output, just at the upper margin."
+
+  - title: "Priority Sale Pitch to Seller"
+    audience: "Individual seller"
+    word_count: 125
+    reading_level: "4th grade"
+    content: |
+      Your goals are relentless. The demand, always the same. Sell more. Yet prospects are making things hard. They ignore you. When they do talk, all they want is a lower price.
+
+      You might start to wonder if there’s any future in this. When you’re getting pressure from both sides.
+
+      We believe you shouldn’t have to feel that way. You deserve better tools to sell in today’s environment.
+
+      The Priority Sale was built for today. It's a fresh approach to selling that places you higher up, earlier in the sale. It’s a place where price doesn’t matter, but solving problems does. You’ll make higher-value sales. You’ll stop feeling stuck between the demands of your goals and your prospects.
+    evaluation:
+      type: "good"
+      strengths:
+        - Tailored to seller's pain points
+        - Strong emotional language
+        - Clear connection to priority and relief
+        - Concise and easily understandable
+      improvements: []
+    notes: "Excellent example of audience-specific, emotional, and structured pitch."
+
+  - title: "Manufacturing Equipment Repair Pitch (Bad)"
+    audience: "Maintenance manager / industrial executive"
+    word_count: ~180
+    reading_level: "Unknown, likely 10th+"
+    content: |
+      Decommissioning of capital requires careful analysis. However, we have observed that this process often lacks consideration of a pathway that can significantly incorporate economic efficiencies while simultaneously improving operational efficiency. In fact, when we speak to maintenance managers, they often refer to planned obsolescence being incorporated into their routine planning.
+
+      We believe our maintenance program should be considered a viable alternative to decommissioning.
+
+      Our maintenance plan includes monthly checkups, along with reliable break-fix services. Unlike a maintenance contract, we don’t charge an often-times expensive monthly fee. You will only be invoiced for the work that’s completed. Our difference is that we’ve been in business for 125 years. Our footprint is very large, and we staff the best engineers in the industry. What’s more, we carry the stock parts and the tools needed for more models of equipment than any other maintenance provider in this industry.
+    evaluation:
+      type: "bad"
+      weaknesses:
+        - Overly technical and difficult to understand
+        - Lacks emotional resonance
+        - Belief statement is seller-focused
+        - Relief section is too detailed without tying back to pain or threat
+      improvements:
+        - Simplify language
+        - Refocus on prospect’s priorities
+        - Introduce emotional framing and clear threat connection
+
+  - title: "Priority Sale Pitch Using Jargon"
+    audience: "Sales enablement manager"
+    word_count: 141
+    reading_level: "8th grade"
+    content: |
+      The Priority Sale is an innovative methodology for sales transformation, engineered to enable higher ROI through optimized sales funnel dynamics and stakeholder-aligned value delivery frameworks. By leveraging predictive engagement strategies and dynamic qualification checkpoints, your team can maximize revenue capture and reduce deal cycle friction.
+
+      Our approach includes modular training content, pre-configured CRM integrations, and AI-driven coaching recommendations. This comprehensive stack ensures scalable onboarding and improved sales enablement KPIs across segments.
+
+      With a proven track record in enterprise B2B markets, our proprietary system delivers measurable success. Unlock the next frontier in sales performance with The Priority Sale.
+
+    evaluation:
+      type: "bad"
+      weaknesses:
+        - Filled with jargon and buzzwords
+        - Lacks clear pain or threat statement
+        - No emotional or human connection
+        - Belief and relief statements are vague and impersonal
+      improvements:
+        - Use simpler, clearer language
+        - Focus on prospect’s real-world pain points and priorities
+        - Include emotional language and a clear threat/relief narrative
+    notes: "This pitch feels like marketing speak without substance. It fails to connect on a human level or demonstrate a compelling reason to engage."
