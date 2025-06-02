@@ -71,9 +71,6 @@ def save_submission(email, pitch_text, feedback):
 
     # store in Firestore in a collection named after the domain
     db.collection(domain).add(entry)
-    
-    print("FIREBASE SAVE SUCCESSFUL")
-    print(f"Submitted for: {email} | Domain: {domain}")
 
 def fetch_all_submissions():
     '''Grabs all submissions stored in Firestore DB.'''

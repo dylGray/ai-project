@@ -10,7 +10,7 @@
 </head> 
 <body class="bg-neutral-900 text-white h-screen flex flex-col items-center px-4">
 
-  <div class="hidden md:flex gap-3 absolute top-6 left-6">
+  <div class="gap-3 absolute top-6 left-6">
     <a href="/login" 
       class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200">
       Logout
@@ -24,12 +24,12 @@
     {% endif %}
   </div>
 
-  <div class="mt-8 md:mt-16 max-w-4xl w-full text-center">
+  <div id="head-text-container" class="mt-20 md:mt-40 max-w-4xl w-full text-center">
     <h1 class="text-2xl md:text-4xl font-extrabold text-white animate-fade-in">Elevator Pitch Challenge</h1>
 
     <!-- Usage recommendation section -->
     <div class="mt-2">
-      <p class="block md:hidden text-sm text-neutral-300">
+      <p class="block md:hidden text-sm text-neutral-300 mb-3">
         For the best experience, please use this application on a laptop or desktop and ensure you have a clear microphone connected.
       </p>
     </div>
@@ -39,7 +39,7 @@
       <p style="font-size: 17px;" class="hidden md:block mt-3 text-sm text-neutral-200">
         You’ve got 40 seconds to capture your prospect’s attention — will your pitch make them lean in or walk away?
       </p>
-      <p class="hidden md:block mt-2 text-xs italic text-neutral-400">
+      <p class="hidden md:block mt-2 text-xs italic text-neutral-400 mb-3">
         Note: This tool does not provide immediate feedback. All submitted pitches are securely stored within the system for future analysis.
       </p>
     </div>
@@ -47,7 +47,7 @@
 
   <!-- CHAT CONTAINER -->
   <div id="chat-container"
-       class="relative flex flex-col flex-grow w-full max-w-4xl mt-6 md:mt-8 p-4 mb-4 bg-neutral-800 rounded-xl shadow-xl overflow-hidden">
+       class="relative flex flex-col flex-grow w-full max-w-4xl p-4 mb-4 rounded-xl shadow-xl overflow-hidden">
     
     <!-- CHAT BOX (hidden initially) -->
     <div id="chat-box"

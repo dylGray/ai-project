@@ -1,5 +1,8 @@
 'use strict';
 
+// using the webkitSpeechRecognition API for voice input
+// this is a non-standard API, so it may not work in all browsers
+
 const micButton = document.getElementById("mic-button");
 
 if ('webkitSpeechRecognition' in window) {

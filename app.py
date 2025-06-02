@@ -1,16 +1,9 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
-from model import (
-    build_system_prompt,
-    build_fallback_system_prompt,
-    get_completion_from_messages,
-    is_valid_pitch
-)
+from model import build_system_prompt, build_fallback_system_prompt, get_completion_from_messages, is_valid_pitch
 from firestore import save_submission, fetch_all_submissions
 from io import StringIO
 import os
 import csv
-
-# test
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
@@ -74,9 +67,8 @@ def chat():
     try:
         classification = is_valid_pitch(user_message)
 
-        # ─── CASE A: Not a pitch → Send to GPT with the fallback prompt ───
+        # CASE A: Not a pitch, send to GPT with the fallback prompt
         if not classification.get("is_pitch", False):
-            # Build a tiny chat history with our fallback system prompt
             fallback_messages = [
                 {"role": "system", "content": fallback_system_prompt},
                 {"role": "user",   "content": user_message}
@@ -85,15 +77,14 @@ def chat():
             # Call GPT so it can answer/engage and then remind them to pitch
             fallback_response = get_completion_from_messages(
                 messages=fallback_messages,
-                model="gpt-4",        # or "gpt-3.5-turbo", whichever you prefer
-                temperature=0.7,      # slightly higher temp for a friendlier tone
-                max_tokens=400        # enough room for chatty reply + reminder
+                model="gpt-4",       
+                temperature=0.7,      
+                max_tokens=400      
             )
 
-            # Return whatever GPT generates
             return jsonify({"response": fallback_response})
 
-        # ─── CASE B: It's a pitch → Proceed with your normal evaluation flow ───
+        # CASE B: It's a pitch, proceed with your normal evaluation flow 
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": user_message}
@@ -101,8 +92,8 @@ def chat():
 
         ai_feedback = get_completion_from_messages(
             messages=messages,
-            model="gpt-4",     # your evaluation model
-            temperature=0.4,   # keep it deterministic for grading
+            model="gpt-4",     
+            temperature=0.4,   
             max_tokens=500
         )
 

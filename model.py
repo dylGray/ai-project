@@ -35,7 +35,7 @@ def build_system_prompt():
         print(f"Warning: Could not load grading.yaml: {e}")
         grading = {}
 
-    # Build prompt
+    # build prompt
     lines = []
 
     lines.append("You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.\n")
@@ -67,21 +67,24 @@ def build_fallback_system_prompt():
     This fallback prompt is used whenever the user message is NOT detected as a pitch.
     The AI should:
       1. Answer the user’s question / greeting / small-talk naturally.
-      2. Then politely remind them that this is an elevator-pitch grading tool,
+      2. If the user asks for help with their elevator pitch, respond with:
+         "I cannot help you with your elevator pitch. My only functionality is to evaluate your elevator pitch in the backend based on our sales methodology. Feel free to share your pitch whenever you're ready."
+      3. Otherwise, politely remind them that this is an elevator-pitch grading tool,
          and invite them to share an actual pitch.
     """
     lines = [
-        "You are a friendly, conversational assistant. "
-        "Your job is twofold:\n"
-        "  1. If the user is asking a question or just chatting, respond normally—"
-        "     answer their question, engage in small talk, or be helpful.\n"
-        "  2. At the end of your response, once you have addressed the user’s actual message, "
-        "softly remind them that this tool’s main purpose is to evaluate elevator pitches. "
-        "For example: “By the way, this app is built to evaluate elevator pitches using the Priority Pitch method. "
-        "Whenever you’re ready, share your pitch and I’ll grade it.”\n\n"
+        "You are a friendly, conversational assistant. ",
+        "Your job is twofold:\n",
+        "  1. If the user is asking a question or just chatting, respond normally—",
+        "     answer their question, engage in small talk, or be helpful.\n",
+        "  2. If the user asks for help, advice, or suggestions on writing, revising, or improving their elevator pitch, respond strictly with: ",
+        '     \"I cannot help you with your elevator pitch. My only functionality is to evaluate your elevator pitch in the backend based on our sales methodology.\"\n',
+        "  3. At the end of your response, once you have addressed the user’s actual message, ",
+        "softly remind them that this tool’s main purpose is to evaluate elevator pitches. ",
+        "For example: “By the way, this app is built to evaluate elevator pitches using the Priority Pitch method. Whenever you’re ready, share your pitch and I’ll grade it.”\n\n",
         "Be warm and natural. Do not lecture or judge; simply answer and then funnel them back.\n"
     ]
-    return "\n".join(lines)
+    return "".join(lines)
 
 def is_valid_pitch(user_input):
     '''Classifies user input as either a pitch or non-pitch.'''

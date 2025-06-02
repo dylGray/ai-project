@@ -4,6 +4,7 @@ const chatContainer = document.getElementById('chat-container');
 const chatBox = document.getElementById('chat-box');
 const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
+const headText = document.getElementById('head-text-container');
 
 chatContainer.classList.remove('bg-neutral-800');
 
@@ -20,6 +21,8 @@ chatForm.addEventListener('submit', async (e) => {
         chatBox.classList.remove('hidden');
         chatForm.className = normalFormClasses;
         chatContainer.classList.add('bg-neutral-800');
+        headText.classList.remove('mt-20', 'md:mt-40');
+        headText.classList.add('mt-10', 'md:mt-20');
     }
 
     chatBox.innerHTML += `
@@ -61,12 +64,27 @@ chatForm.addEventListener('submit', async (e) => {
     const data = await response.json();
     const reply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
 
-    chatBox.innerHTML += `
-      <div class="flex items-start space-x-2">
-        <img src="/static/images/tps-logo.webp" alt="AI Logo" class="w-5 h-5 mt-2 rounded shadow-md" />
-        <div class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl">${reply}</div>
-      </div>
+    // Typewriter effect for AI response
+    const aiContainer = document.createElement('div');
+    aiContainer.className = "flex items-start space-x-2";
+    aiContainer.innerHTML = `
+      <img src="/static/images/tps-logo.webp" alt="AI Logo" class="w-5 h-5 mt-2 rounded shadow-md" />
+      <div class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl typewriter-output"></div>
     `;
+    chatBox.appendChild(aiContainer);
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    const outputDiv = aiContainer.querySelector('.typewriter-output');
+    let i = 0;
+    function typeWriter() {
+      if (i < reply.length) {
+        outputDiv.innerHTML += reply[i] === '\n' ? '<br>' : reply[i];
+        i++;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        setTimeout(typeWriter, 12); // Adjust speed as needed
+      }
+    }
+    typeWriter();
 
     chatBox.scrollTop = chatBox.scrollHeight;
 });
