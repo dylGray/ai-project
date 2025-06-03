@@ -27,14 +27,12 @@
   <div id="head-text-container" class="mt-24 md:mt-40 max-w-4xl w-full text-center">
     <h1 class="text-2xl md:text-4xl font-extrabold text-white animate-fade-in">Elevator Pitch Challenge</h1>
 
-    <!-- Usage recommendation section -->
     <div class="mt-2">
       <p class="block md:hidden text-sm text-neutral-300 mb-3">
         For the best experience, please use this application on a laptop or desktop and ensure you have a clear microphone connected.
       </p>
     </div>
     
-    <!-- Visible only on desktop -->
     <div>
       <p style="font-size: 17px;" class="hidden md:block mt-3 text-sm text-neutral-200">
         You’ve got 40 seconds to capture your prospect’s attention — will your pitch make them lean in or walk away?
@@ -45,14 +43,8 @@
     </div>
   </div>
 
-  <!-- CHAT CONTAINER -->
-  <div id="chat-container"
-       class="relative flex flex-col flex-grow w-full max-w-4xl p-4 mb-4 rounded-xl overflow-hidden">
-    
-    <!-- CHAT BOX (hidden initially) -->
-    <div id="chat-box"
-         class="flex-1 overflow-y-auto p-4 bg-neutral-900 rounded-lg shadow-inner space-y-4 hidden">
-      <!-- messages will be injected here -->
+  <div id="chat-container" class="relative flex flex-col flex-grow w-full max-w-4xl p-4 mb-4 rounded-xl overflow-hidden">
+    <div id="chat-box" class="flex-1 overflow-y-auto p-4 bg-neutral-900 rounded-lg shadow-inner space-y-4 hidden">
       <div id="mobile-instructions"
            class="block md:hidden flex h-full items-center justify-center text-center text-sm text-neutral-200">
         <div class="flex flex-col items-center justify-center space-y-2 max-w-sm mx-auto">
@@ -63,10 +55,7 @@
       </div>
     </div>
 
-    <!-- CHAT INPUT FORM -->
-    <!-- Initially: centered via absolute/transform classes. After first submit, JS will swap these out -->
-    <form id="chat-form"
-          class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-14">
+    <form id="chat-form" class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-14">
       <input 
         id="user-input" 
         type="text" 

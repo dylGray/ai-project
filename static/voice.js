@@ -15,20 +15,23 @@ if ('webkitSpeechRecognition' in window) {
   let finalTranscript = ""; 
 
   micButton.addEventListener("click", (event) => {
-    // only toggle mic if the click is a real mouse click (event.detail !== 0)
-    // this prevents Enter/Space from toggling the mic when the button is focused
     if (event.detail === 0) return;
+    const inputField = document.getElementById("user-input");
+
     if (!recognizing) {
       finalTranscript = ""; 
       recognition.start();
       recognizing = true;
       micButton.classList.add("text-red-500");
+      inputField.placeholder = "Recording... speak now and click the mic again to stop.";
     } else {
       recognition.stop();
       recognizing = false;
       micButton.classList.remove("text-red-500");
+      inputField.placeholder = "Click the mic to start your pitch, click again to end your pitch...";
     }
   });
+
 
   recognition.onresult = (event) => {
     for (let i = event.resultIndex; i < event.results.length; i++) {
