@@ -41,9 +41,26 @@ if ('webkitSpeechRecognition' in window) {
     }
   };
 
-  recognition.onend = () => {
+  recognition.onend = async () => {
     if (finalTranscript.trim().length > 0) {
-      document.getElementById("user-input").value = finalTranscript.trim();
+      let processed = finalTranscript.trim();
+      // Send to backend for punctuation/capitalization
+      try {
+        const response = await fetch('/punctuate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: processed })
+        });
+        const data = await response.json();
+        if (data.punctuated) {
+          processed = data.punctuated;
+        } else if (data.error) {
+          console.error('Punctuation API error:', data.error);
+        }
+      } catch (err) {
+        console.error('Error calling punctuation API:', err);
+      }
+      document.getElementById("user-input").value = processed;
       document.getElementById("chat-form").dispatchEvent(new Event("submit"));
     }
   };

@@ -23,6 +23,11 @@ chatForm.addEventListener('submit', async (e) => {
         chatContainer.classList.add('bg-neutral-800');
         headText.classList.remove('mt-24', 'md:mt-40');
         headText.classList.add('mt-12', 'md:mt-20');
+
+        const helpButton = document.getElementById('help-button');
+        const mobileMessage = document.getElementById('mobile-message');
+        if (helpButton) helpButton.style.display = 'none';
+        if (mobileMessage) mobileMessage.style.display = 'none';
     }
 
     chatBox.innerHTML += `
@@ -64,7 +69,7 @@ chatForm.addEventListener('submit', async (e) => {
     const data = await response.json();
     const reply = data.response || `<span class="text-red-400">Error:</span> ${data.error}`;
 
-    // Typewriter effect for AI response
+    // typewriter effect for AI response
     const aiContainer = document.createElement('div');
     aiContainer.className = "flex items-start space-x-2";
     aiContainer.innerHTML = `

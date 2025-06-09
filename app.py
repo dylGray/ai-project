@@ -145,5 +145,37 @@ def download_data():
     return Response(output, mimetype="text/csv",
                     headers={"Content-Disposition": "attachment;filename=priority_pitch_data.csv"})
 
+@app.route("/punctuate", methods=["POST"])
+def punctuate():
+    '''Adds punctuation and capitalization to raw voice input using OpenAI.'''
+    data = request.get_json()
+    raw_text = data.get("text", "").strip()
+    if not raw_text:
+        return jsonify({"error": "No text provided"}), 400
+    try:
+        prompt = (
+            "You are a helpful assistant. Add proper punctuation and capitalization to the following text. "
+            "Do not change any words, just fix punctuation and capitalization. Return only the improved text.\n\n"
+            f"Text: {raw_text}"
+        )
+
+        messages = [
+            {"role": "system", "content": prompt}
+        ]
+
+        result = get_completion_from_messages(
+            messages, 
+            model="gpt-3.5-turbo-0125", 
+            temperature=0, 
+            max_tokens=200)
+        
+        if not result:
+            return jsonify({"error": "Failed to punctuate text"}), 500
+        return jsonify({"punctuated": result.strip()})
+    
+    except Exception as e:
+        print("ERROR in /punctuate route:", e)
+        return jsonify({"error": "Internal Server Error"}), 500
+
 if __name__ == "__main__":
     app.run(debug=True)

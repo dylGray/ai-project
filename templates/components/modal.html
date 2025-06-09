@@ -1,0 +1,37 @@
+<div id="help-modal" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center hidden z-50">
+  <div class="bg-neutral-800 text-white rounded-2xl shadow-2xl max-w-md w-full p-6 relative border border-neutral-700">
+
+    <button type="button" id="close-modal" class="absolute top-4 right-4 text-neutral-400 hover:text-red-400 transition" aria-label="Close">
+      <i class="fas fa-times-circle fa-lg"></i>
+    </button>
+
+    <div class="flex items-center gap-3 mb-2">
+      <i class="fas fa-circle-question text-blue-400 text-xl"></i>
+      <h2 class="text-2xl font-extrabold tracking-tight">Getting Started</h2>
+    </div>
+
+    <hr class="border-t border-neutral-600 my-4" />
+
+    <ol class="list-decimal pl-6 space-y-3 text-sm text-neutral-300">
+
+      <!-- Step 1 with icon aligned without breaking numbering -->
+      <li class="relative">
+        <div class="flex items-center pr-8">
+          <span><span class="text-neutral-100">Click the mic</span> to start your pitch.</span>
+          <svg id="mic-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+              class="w-5 h-5 text-white flex-shrink-0">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 18.25v1.5M8.25 12a3.75 3.75 0 007.5 0V5.75a3.75 3.75 0 00-7.5 0V12z" />
+          </svg>
+        </div>
+      </li>
+
+      <!-- Remaining steps -->
+      <li><span class="text-neutral-100">Speak clearly</span> and stay within the 40-second limit.</li>
+      <li><span class="text-neutral-100">Click the mic again</span> to end your pitch.</li>
+      <li>Your pitch will be <span class="text-neutral-100">uploaded securely</span>. This tool does <strong>not</strong> provide feedback.</li>
+
+    </ol>
+  </div>
+</div>

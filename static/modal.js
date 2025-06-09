@@ -1,17 +1,23 @@
-const helpButton = document.getElementById('help-button');
-const helpModal = document.getElementById('help-modal');
-const closeModal = document.getElementById('close-modal');
+'use strict';
 
-helpButton.addEventListener('click', () => {
-    helpModal.classList.remove('hidden');
-});
+document.addEventListener("DOMContentLoaded", () => {
+  const helpButton = document.getElementById('help-button');
+  const helpModal = document.getElementById('help-modal');
+  const closeModal = document.getElementById('close-modal');
 
-closeModal.addEventListener('click', () => {
-    helpModal.classList.add('hidden');
-});
+  if (helpButton && helpModal && closeModal) {
+    helpButton.addEventListener('click', () => {
+        helpModal.classList.remove('hidden');
+    });
 
-window.addEventListener('click', (e) => {
-    if (e.target === helpModal) {
-    helpModal.classList.add('hidden');
-    }
+    closeModal.addEventListener('click', () => {
+        helpModal.classList.add('hidden');
+    });
+
+    window.addEventListener('click', (e) => {
+      if (e.target === helpModal) {
+        helpModal.classList.add('hidden');
+      }
+    });
+  }
 });
