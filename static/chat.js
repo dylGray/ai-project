@@ -28,6 +28,12 @@ chatForm.addEventListener('submit', async (e) => {
         const mobileMessage = document.getElementById('mobile-message');
         if (helpButton) helpButton.style.display = 'none';
         if (mobileMessage) mobileMessage.style.display = 'none';
+
+        const refreshContainer = document.getElementById('refresh-container');
+        if (refreshContainer) refreshContainer.classList.remove('hidden');
+
+        const sendButton = document.getElementById('send-button');
+        if (sendButton) sendButton.classList.add('hidden');
     }
 
     chatBox.innerHTML += `
@@ -93,3 +99,10 @@ chatForm.addEventListener('submit', async (e) => {
 
     chatBox.scrollTop = chatBox.scrollHeight;
 });
+
+const refreshBtn = document.getElementById('refresh-chat-btn');
+if (refreshBtn) {
+    refreshBtn.addEventListener('click', () => {
+        window.location.reload();
+    });
+}

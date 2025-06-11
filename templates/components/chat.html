@@ -10,7 +10,7 @@
     </div>
   </div>
 
-  <form id="chat-form" class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl flex items-center bg-neutral-700 rounded-3xl px-4 py-2 shadow-lg h-16">
+  <form id="chat-form" class="absolute top-1/4 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl flex items-center bg-neutral-700 rounded-3xl px-4 py-2 shadow-lg h-16 md:h-20">
     <input 
       id="user-input" 
       type="text" 
@@ -19,16 +19,31 @@
     />
     <button 
       type="submit"
+      id="send-button"
+      class="hidden w-11 h-11 flex items-center justify-center bg-neutral-800 rounded-3xl text-white shadow-md transition mr-2"
+      aria-label="Send message"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" 
+          viewBox="0 0 24 24" stroke="currentColor" 
+          class="w-5 h-5 text-blue-300">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+
+    <button 
+      type="submit"
       id="mic-button"
-      class="ml-3 w-11 h-11 flex items-center justify-center text-white hover:text-red-500 transition"
+      class="w-11 h-11 flex items-center justify-center bg-neutral-800 rounded-3xl text-white shadow-md transition"
       aria-label="Start voice input"
     >
       <svg id="mic-icon" xmlns="http://www.w3.org/2000/svg" fill="none"
-           viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
-           class="w-6 h-6">
+          viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="w-6 h-6 text-red-500">
         <path stroke-linecap="round" stroke-linejoin="round"
               d="M12 18.25v1.5M8.25 12a3.75 3.75 0 007.5 0V5.75a3.75 3.75 0 00-7.5 0V12z" />
       </svg>
     </button>
+
   </form>
 </div>

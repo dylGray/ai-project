@@ -5,6 +5,16 @@
 
 const micButton = document.getElementById("mic-button");
 
+// Add this after your DOM elements are defined
+const sendButton = document.getElementById('send-button');
+userInput.addEventListener('input', () => {
+  if (userInput.value.trim().length > 0) {
+    sendButton.classList.remove('hidden');
+  } else {
+    sendButton.classList.add('hidden');
+  }
+});
+
 if ('webkitSpeechRecognition' in window) {
   const recognition = new webkitSpeechRecognition();
   recognition.continuous = true; 

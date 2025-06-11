@@ -1,3 +1,5 @@
+# this file handles AI prompt logic, model utilities, and rules
+
 import os
 import json
 import yaml
@@ -15,7 +17,6 @@ client = OpenAI(api_key=api_key)
 def build_system_prompt():
     '''
     Builds an efficient, structured system prompt from YAML files.
-
     - Loads framework principles and grading criteria from YAML files
     - Minimizes token usage while retaining clarity and structure
     - Returns prompt string for injection into OpenAI API
@@ -113,6 +114,7 @@ def build_fallback_system_prompt():
       3. Otherwise, politely remind them that this is an elevator-pitch grading tool,
          and invite them to share an actual pitch.
     """
+
     lines = [
         "You are a friendly, conversational assistant. ",
         "Your job is twofold:\n",
@@ -124,6 +126,7 @@ def build_fallback_system_prompt():
         "softly remind them that this tool’s main purpose is to evaluate elevator pitches, not improve them or provide feedback. ",
         "Be warm and natural. Do not lecture or judge; simply answer and then funnel them back.\n"
     ]
+    
     return "".join(lines)
 
 def is_valid_pitch(user_input):

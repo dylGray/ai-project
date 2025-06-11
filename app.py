@@ -1,3 +1,5 @@
+# this file handles client side logic, routing, and API endpoints
+
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
 from model import build_system_prompt, build_fallback_system_prompt, get_completion_from_messages, is_valid_pitch
 from firestore import save_submission, fetch_all_submissions
@@ -67,14 +69,14 @@ def chat():
     try:
         classification = is_valid_pitch(user_message)
 
-        # CASE A: Not a pitch, send to GPT with the fallback prompt
+        # CASE A: not a pitch, send to GPT with the fallback prompt
         if not classification.get("is_pitch", False):
             fallback_messages = [
                 {"role": "system", "content": fallback_system_prompt},
                 {"role": "user",   "content": user_message}
             ]
 
-            # Call GPT so it can answer/engage and then remind them to pitch
+            # call GPT so it can answer/engage and then remind them to pitch
             fallback_response = get_completion_from_messages(
                 messages=fallback_messages,
                 model="gpt-4",       
@@ -84,7 +86,7 @@ def chat():
 
             return jsonify({"response": fallback_response})
 
-        # CASE B: It's a pitch, proceed with your normal evaluation flow 
+        # CASE B: this is a pitch, proceed with your normal evaluation flow 
         messages = [
             {"role": "system", "content": system_prompt},
             {"role": "user",   "content": user_message}
@@ -118,7 +120,7 @@ def download_data():
     all_submissions = fetch_all_submissions()
 
     output = StringIO()
-    output.write('\ufeff')  # <- UTF-8 BOM for Excel
+    output.write('\ufeff')  
 
     writer = csv.writer(output)
     writer.writerow(["Email", "Pitch", "Pain", "Threat", "Belief Statement", "Relief", "Tone", "Length", "Clarity", "Submitted At"])

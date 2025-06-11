@@ -1,3 +1,5 @@
+# this script is used to interact with Firestore for storing and retrieving user submissions
+
 import os
 import re
 import json
