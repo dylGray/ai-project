@@ -48,3 +48,7 @@ components:
     description: >
       Must be easy to say aloud.
       Avoid awkward phrasing or run-ons.
+
+examples_reference:
+  description: |
+    For canonical examples of good and bad Priority Pitches, see pitch_assets/examples.yaml. These examples are used to illustrate the application of the framework and grading criteria in real-world scenarios. The AI model should use these as reference points for evaluation and feedback.
