@@ -26,7 +26,6 @@ def root():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     '''Handles user and admin login.'''
-
     if request.method == "POST":
         email = request.form.get("email", "").strip().lower()
         session["logged_in"] = True
@@ -38,7 +37,6 @@ def login():
 @app.route("/chat")
 def index():
     '''Renders main application landing page.'''
-        
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
@@ -56,7 +54,6 @@ def index():
 @app.route("/chat", methods=["POST"])
 def chat():
     '''Processes user pitch input OR gives a conversational fallback.'''
-
     if not session.get("logged_in"):
         return jsonify({"error": "Unauthorized"}), 401
 
@@ -70,7 +67,7 @@ def chat():
         classification = is_valid_pitch(user_message)
 
         # CASE A: not a pitch, send to GPT with the fallback prompt
-        if not classification.get("is_pitch", False):
+        if not classification.get("is_pitch", False) or classification.get("reason") == "Placeholder":
             fallback_messages = [
                 {"role": "system", "content": fallback_system_prompt},
                 {"role": "user",   "content": user_message}
@@ -112,7 +109,6 @@ def chat():
 @app.route("/download")
 def download_data():
     '''Allows admin users to download all submitted pitches and evaluations as CSV.'''
-
     email = session.get("email", "").strip().lower()
     if email not in admin_emails:
         return redirect(url_for("index"))
@@ -147,9 +143,9 @@ def download_data():
     return Response(output, mimetype="text/csv",
                     headers={"Content-Disposition": "attachment;filename=priority_pitch_data.csv"})
 
-@app.route("/punctuate", methods=["POST"])
-def punctuate():
-    '''Adds punctuation and capitalization to raw voice input using OpenAI.'''
+@app.route("/clean", methods=["POST"])
+def clean_pitch():
+    '''Adds punctuation and capitalization on the client-side to raw voice input using OpenAI.'''
     data = request.get_json()
     raw_text = data.get("text", "").strip()
     if not raw_text:
@@ -172,7 +168,7 @@ def punctuate():
             max_tokens=200)
         
         if not result:
-            return jsonify({"error": "Failed to punctuate text"}), 500
+            return jsonify({"error": "Faclean_pitch text"}), 500
         return jsonify({"punctuated": result.strip()})
     
     except Exception as e:

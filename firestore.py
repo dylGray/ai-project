@@ -1,4 +1,4 @@
-# this script is used to interact with Firestore for storing and retrieving user submissions
+# this script is used to interact with Cloud Firestore DB for storing and retrieving user submissions
 
 import os
 import re
@@ -76,7 +76,6 @@ def save_submission(email, pitch_text, feedback):
 
 def fetch_all_submissions():
     '''Grabs all submissions stored in Firestore DB.'''
-
     all_data = []
 
     collections = db.collections()

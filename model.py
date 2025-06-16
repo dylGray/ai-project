@@ -24,15 +24,11 @@ def load_yaml(path):
         return {}
 
 def build_system_prompt():
-    '''
-    Builds an efficient, structured system prompt from YAML files.
-    Uses a multi-line f-string for clarity and maintainability.
-    '''
+    '''Builds an efficient, structured system prompt pitch_assets.'''
     framework = load_yaml("pitch_assets/framework.yaml")
     grading = load_yaml("pitch_assets/grading.yaml")
     examples = load_yaml("pitch_assets/examples.yaml")
 
-    # prepare good and bad examples
     pitch_examples = examples.get("pitches", [])
     good_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "") == "good"]
     bad_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "") == "bad"]
@@ -102,23 +98,14 @@ def build_system_prompt():
     return prompt
 
 def build_fallback_system_prompt():
-    """
-    This fallback prompt is used whenever the user message is NOT detected as a pitch.
-    The AI should:
-      1. Answer the user’s question / greeting / small-talk naturally.
-      2. If the user asks for help with their elevator pitch, respond with:
-         "I cannot help you with your elevator pitch. My main functionality is to evaluate your pitch in our system, not improve or provide immeadiate feedback. Feel free to share your pitch whenever you're ready."
-      3. Otherwise, politely remind them that this is an elevator-pitch grading tool,
-         and invite them to share an actual pitch.
-    """
-
+    '''Builds a fallback system prompt for non-pitch interactions.'''
     lines = [
         "You are a friendly, conversational assistant. ",
         "Your job is twofold:\n",
         "  1. If the user is asking a question or just chatting, respond normally—",
         "     answer their question, engage in small talk, or be helpful.\n",
         "  2. If the user asks for help, advice, or suggestions on writing, revising, or improving their elevator pitch, respond strictly with: ",
-        '     \"I cannot help you with your elevator pitch. My only functionality is to evaluate your elevator pitch in the backend based on The Priority Sales methodology.\"\n',
+        '     \"I cannot help you with your elevator pitch. My only functionality is to evaluate your elevator pitch based on The Priority Sales methodology.\"\n',
         "  3. At the end of your response, once you have addressed the user’s actual message, ",
         "softly remind them that this tool’s main purpose is to evaluate elevator pitches, not improve them or provide feedback. ",
         "Be warm and natural. Do not lecture or judge; simply answer and then funnel them back.\n"
@@ -127,7 +114,21 @@ def build_fallback_system_prompt():
     return "".join(lines)
 
 def is_valid_pitch(user_input):
-    '''Classifies user input as either a pitch or non-pitch.'''
+    '''
+    Classifies user input as either a pitch or non-pitch, with inline placeholder detection.
+    Makes a call to OpenAI's GPT model to classify the input.
+    '''
+    placeholders = [
+        "here is my pitch", "my pitch is", "test", "sample", "coming soon", "tbd", "to be added", "n/a", "na", "none", "placeholder", "draft", "lorem ipsum", "write my pitch", "i will write my pitch", "this is my pitch", "pitch", "elevator pitch", "submit", "hello", "hi", "-", "...", "?", "!", "[your pitch here]", "[insert pitch]"
+    ]
+    normalized = user_input.strip().lower()
+    if normalized in placeholders:
+        return {"is_pitch": False, "reason": "Placeholder"}
+    for ph in placeholders:
+        if normalized.startswith(ph) or normalized.endswith(ph):
+            return {"is_pitch": False, "reason": "Placeholder"}
+    if len(normalized) < 15:
+        return {"is_pitch": False, "reason": "Placeholder"}
 
     classification_prompt = [
         {
@@ -160,7 +161,6 @@ def is_valid_pitch(user_input):
 
 def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
     '''Sends a prompt and message history to OpenAI's GPT model to get a generated completion.'''
-
     try:
         response = client.chat.completions.create(
             model=model,
