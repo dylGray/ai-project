@@ -56,7 +56,7 @@ if ('webkitSpeechRecognition' in window) {
       let processed = finalTranscript.trim();
       // Send to backend for punctuation/capitalization
       try {
-        const response = await fetch('/punctuate', {
+        const response = await fetch('/clean', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text: processed })

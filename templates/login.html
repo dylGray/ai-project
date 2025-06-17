@@ -6,10 +6,28 @@
   <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <style>
+    body:not(.dark-mode) .login-container input[type="email"] {
+      background: #fff !important;
+      color: #18181b !important;
+    }
+    body:not(.dark-mode) .login-container input[type="email"]::placeholder {
+      color: #64748b !important; /* slate-400 */
+    }
+    body:not(.dark-mode) .login-container .signin-btn {
+      color: #fff !important;
+    }
+  </style>
 </head>
 <body class="bg-neutral-900 text-white flex items-center justify-center min-h-screen px-4">
+  <div class="fixed top-4 left-4 z-50">
+    <button id="theme-toggle" type="button" class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-start gap-2">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+  </div>
   <div class="w-full max-w-md">
-    <form action="/login" method="POST" class="bg-neutral-800 rounded-2xl shadow-xl p-8 space-y-6 animate-fade-in">
+    <form action="/login" method="POST" class="login-container bg-neutral-800 rounded-2xl shadow-xl p-8 space-y-6 animate-fade-in">
       <div class="text-center">
         <img src="{{ url_for('static', filename='images/tps-logo.webp') }}" alt="Priority Pitch Logo" class="mx-auto mb-5 w-10 h-10" />
         <h1 class="text-3xl font-bold tracking-tight">Welcome!</h1>
@@ -30,7 +48,7 @@
 
       <button
         type="submit"
-        class="w-full bg-blue-600 hover:bg-blue-700 transition-colors px-4 py-3 rounded-lg font-semibold text-white"
+        class="signin-btn w-full bg-blue-600 hover:bg-blue-700 transition-colors px-4 py-3 rounded-lg font-semibold text-white"
       >
         Sign In
       </button>
@@ -40,6 +58,6 @@
       © 2025 Priority Pitch. All rights reserved.
     </p>
   </div>
-
+  <script src="{{ url_for('static', filename='login.js') }}"></script>
 </body>
 </html>

@@ -20,6 +20,16 @@ chatForm.addEventListener('submit', async (e) => {
     if (chatBox.classList.contains('hidden')) {
         chatBox.classList.remove('hidden');
         chatForm.className = normalFormClasses;
+
+        const isDark = document.body.classList.contains('dark-mode');
+        if (isDark) {  
+            chatContainer.classList.remove('bg-neutral-200');
+            chatContainer.classList.add('bg-neutral-800');
+        } else {
+            chatContainer.classList.remove('bg-neutral-800'); 
+            chatContainer.classList.add('bg-neutral-200');  
+        }
+
         chatContainer.classList.add('bg-neutral-800');
         headText.classList.remove('mt-24', 'md:mt-40');
         headText.classList.add('mt-12', 'md:mt-20');
@@ -38,7 +48,7 @@ chatForm.addEventListener('submit', async (e) => {
 
     chatBox.innerHTML += `
       <div class="flex items-start justify-end space-x-2 space-x-reverse">
-        <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl text-left">${userMessage}</div>
+        <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl text-left"><span id="user-message">${userMessage}</span></div>
         <i style="margin: 2.5px -5px 0 7.5px;" class="fa-solid fa-user"></i>
       </div>
     `;
@@ -80,7 +90,7 @@ chatForm.addEventListener('submit', async (e) => {
     aiContainer.className = "flex items-start space-x-2";
     aiContainer.innerHTML = `
       <img src="/static/images/tps-logo.webp" alt="AI Logo" class="w-5 h-5 mt-2 rounded shadow-md" />
-      <div class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl typewriter-output"></div>
+      <div id="model-output" class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl typewriter-output"></div>
     `;
     chatBox.appendChild(aiContainer);
     chatBox.scrollTop = chatBox.scrollHeight;
@@ -106,3 +116,51 @@ if (refreshBtn) {
         window.location.reload();
     });
 }
+
+// Theme toggle logic
+const themeToggle = document.getElementById('theme-toggle');
+const themeToggleText = document.getElementById('theme-toggle-text');
+
+function setTheme(dark) {
+  if (dark) {
+    document.body.classList.add('dark-mode');
+    document.documentElement.classList.add('dark-mode');
+    if (themeToggle) themeToggle.querySelector('i').className = 'fa-solid fa-sun';
+    localStorage.setItem('theme', 'dark');
+    
+  } else {
+    document.body.classList.remove('dark-mode');
+    document.documentElement.classList.remove('dark-mode');
+    if (themeToggle) themeToggle.querySelector('i').className = 'fa-solid fa-moon';
+    localStorage.setItem('theme', 'light');
+  }
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.body.classList.contains('dark-mode');
+    setTheme(!isDark);
+
+    if (chatBox && !chatBox.classList.contains('hidden')) {
+      // Chat form has been submitted at least once
+      if (document.body.classList.contains('dark-mode')) {
+        chatContainer.classList.remove('bg-neutral-200');
+        chatContainer.classList.add('bg-neutral-800');
+      } else {
+        chatContainer.classList.remove('bg-neutral-800');
+        chatContainer.classList.add('bg-neutral-200');
+      }
+    }
+
+  });
+}
+
+// On load, set theme from localStorage or system preference
+(function() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    setTheme(true);
+  } else {
+    setTheme(false);
+  }
+})();
