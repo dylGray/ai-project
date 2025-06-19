@@ -55,7 +55,7 @@ chatForm.addEventListener('submit', async (e) => {
     }
 
     chatBox.innerHTML += `
-      <div class="flex items-start justify-end space-x-2 space-x-reverse">
+      <div class="flex items-start justify-end space-x-2 space-x-reverse mt-8">
         <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl text-left"><span id="user-message">${userMessage}</span></div>
         <i style="margin: 2.5px -5px 0 7.5px;" class="fa-solid fa-user"></i>
       </div>
