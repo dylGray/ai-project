@@ -1,15 +1,21 @@
-<div class="hidden md:flex gap-3 absolute top-6 left-6">
+<div class="flex md:flex-col gap-3 absolute top-6 left-3 md:left-6 w-auto md:w-auto justify-start">
     <a href="/login" 
-        class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200">
-        Logout
+        class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
+        <i class="fa-solid fa-right-from-bracket"></i>
     </a>
-    {% if is_admin %}
-        <a href="/download" 
-        class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200">
-        Download Data
-        </a>
-    {% endif %}
-    <button id="theme-toggle" type="button" class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 ml-2">
-        <i class="fa-solid fa-moon"></i>
+    <button id="new-chat-btn" type="button" class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center gap-2">
+        <i class="fa-solid fa-arrows-rotate"></i>
     </button>
+    <!-- md+ only buttons -->
+    <div class="hidden md:flex md:flex-col md:gap-3">
+        {% if is_admin %}
+            <a href="/download" 
+            class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
+            <i class="fa-solid fa-download"></i>
+            </a>
+        {% endif %}
+        <button id="theme-toggle" type="button" class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 ml-0">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </div>
 </div>

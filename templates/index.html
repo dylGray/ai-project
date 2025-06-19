@@ -8,12 +8,12 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-/aO2GmqbLRqkq1...your-full-integrity-key..." crossorigin="anonymous" referrerpolicy="no-referrer" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head> 
+{% include 'components/nav.html' %}
 <body class="bg-neutral-900 text-white h-screen flex flex-col items-center px-4">
 
-  {% include 'components/nav.html' %}
-
-  <div id="head-text-container" class="mt-24 md:mt-40 max-w-4xl w-full text-center">
-    <h1 class="text-2xl md:text-4xl font-extrabold bg-gradient-to-r from-[#0A84FF] via-blue-500 to-blue-600 bg-clip-text text-transparent animate-fade-in">Elevator Pitch Challenge</h1>
+  <div id="main-container">
+    <div id="head-text-container" class="mt-24 md:mt-40 max-w-4xl w-full text-center">
+    <h1 class="text-2xl md:text-4xl font-extrabold bg-gradient-to-r from-[#0A84FF] via-blue-500 to-blue-600 bg-clip-text text-transparent animate-fade-in pb-4">Elevator Pitch Challenge</h1>
 
     <div class="mt-2">
       <p id="mobile-message" class="block md:hidden text-sm text-neutral-300 mb-3">
@@ -31,22 +31,23 @@
     </div>
   </div>
 
+    <div id="refresh-container" class="hidden flex justify-center -mt-2 mb-2">
+      <button 
+        id="refresh-chat-btn" 
+        type="button" 
+        class="text-white font-medium text-xs md:text-md md:px-4 px-3 py-2 hover:text-blue-300 cursor-pointer transition duration-200 flex items-center gap-2">
+        Refresh Chat
+        <i class="fas fa-rotate-right mt-1"></i>
+      </button>
+    </div>
+  </div>
+
   <button 
     type="button" 
     id="help-button" 
     class="bg-neutral-800 border border-white text-white font-medium text-xs md:text-md md:px-4 px-3 py-2 mt-5 rounded-full shadow hover:bg-neutral-700 hover:border-blue-400 hover:text-blue-300 cursor-pointer transition duration-200">
     Need help getting started?
   </button>
-
-  <div id="refresh-container" class="hidden flex justify-center -mt-2 mb-2">
-    <button 
-      id="refresh-chat-btn" 
-      type="button" 
-      class="text-white font-medium text-xs md:text-md md:px-4 px-3 py-2 hover:text-blue-300 cursor-pointer transition duration-200 flex items-center gap-2">
-      Refresh Chat
-      <i class="fas fa-rotate-right mt-1"></i>
-    </button>
-  </div>
 
   {% include 'components/chat.html' %}
   {% include 'components/modal.html' %}

@@ -1,4 +1,6 @@
-/* Light/Dark mode CSS variables */
+/* =====================
+   CSS Variables & Base
+   ===================== */
 :root {
   --bg: #f7f7f7;
   --text: #181818;
@@ -12,7 +14,9 @@ body, html {
   color: var(--text);
 }
 
-/* Dark mode overrides */
+/* =====================
+   Dark Mode Overrides
+   ===================== */
 body.dark-mode, html.dark-mode {
   --bg: #18181b;
   --text: #f7f7f7;
@@ -21,7 +25,36 @@ body.dark-mode, html.dark-mode {
   --card: #23232a;
 }
 
-/* Light mode: Help button styles */
+/* =====================
+   Utility Classes
+   ===================== */
+.bg-neutral-900 { background: var(--bg) !important; }
+.text-white { color: var(--text) !important; }
+.card, .bg-white { background: var(--card) !important; color: var(--text) !important; }
+
+/* =====================
+   Chat Input & Help Button
+   ===================== */
+body:not(.dark-mode) #chat-form, html:not(.dark-mode) #chat-form {
+  background: rgba(255,255,255,0.8) !important; 
+  backdrop-filter: blur(16px) !important; 
+  border-radius: 1.5rem !important; 
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15) !important;
+  border: 1px solid rgba(255,255,255,0.4) !important; 
+  display: flex !important;
+  align-items: center !important;
+}
+
+body.dark-mode #chat-form, html.dark-mode #chat-form {
+  background: rgba(36, 39, 48, 0.75) !important; 
+  backdrop-filter: blur(16px) !important; 
+  border-radius: 1.5rem !important;
+  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important; 
+  display: flex !important;
+  align-items: center !important;
+}
+
 body:not(.dark-mode) #help-button, html:not(.dark-mode) #help-button {
   border-radius: 9999px; /* rounded-full */
   background: #F3F6FA;
@@ -35,32 +68,9 @@ body:not(.dark-mode) #help-button:hover, html:not(.dark-mode) #help-button:hover
   background: #E5F0FF;
 }
 
-/* Light mode: chat input container styles */
-body:not(.dark-mode) #chat-form, html:not(.dark-mode) #chat-form {
-  background: rgba(255,255,255,0.8) !important; 
-  backdrop-filter: blur(16px) !important; 
-  border-radius: 1.5rem !important; 
-  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15) !important;
-  border: 1px solid rgba(255,255,255,0.4) !important; 
-  display: flex !important;
-  align-items: center !important;
-}
-
-/* Dark mode: chat input container styles with blur */
-body.dark-mode #chat-form, html.dark-mode #chat-form {
-  background: rgba(36, 39, 48, 0.75) !important; 
-  backdrop-filter: blur(16px) !important; 
-  border-radius: 1.5rem !important;
-  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important; 
-  display: flex !important;
-  align-items: center !important;
-}
-
-.bg-neutral-900 { background: var(--bg) !important; }
-.text-white { color: var(--text) !important; }
-.card, .bg-white { background: var(--card) !important; color: var(--text) !important; }
-
+/* =====================
+   Chat & Message Styling
+   ===================== */
 body:not(.dark-mode) .main-info-text,
 html:not(.dark-mode) .main-info-text {
   color: #1e293b !important; 
@@ -69,76 +79,85 @@ body:not(.dark-mode) .main-note-text,
 html:not(.dark-mode) .main-note-text {
   color: #334155 !important; 
 }
-
+body:not(.dark-mode) #mobile-message {
+  color: #1e293b !important; 
+}
 body:not(.dark-mode) #user-input,
 html:not(.dark-mode) #user-input {
-    color: black !important;
+  color: black !important;
 }
-
 body.dark-mode #user-input,
 html.dark-mode #user-input {
-    color: white !important;
-}
-
-.dot-flashing {
-    position: relative;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    background-color: #ffffff;
-    animation: dotFlashing 1s infinite linear alternate;
-}
-
-  .dot-flashing::before, .dot-flashing::after {
-    content: '';
-    display: inline-block;
-    position: absolute;
-    top: 0;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    background-color: #ffffff;
-}
-
-.dot-flashing::before {
-    left: -15px;
-    animation: dotFlashing 1s infinite linear alternate;
-    animation-delay: 0.2s;
-}
-
-.dot-flashing::after {
-    left: 15px;
-    animation: dotFlashing 1s infinite linear alternate;
-    animation-delay: 0.4s;
-}
-
-@keyframes dotFlashing {
-    0% { opacity: 0.2; }
-    100% { opacity: 1; }
-}
-
-@keyframes fade-in {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fade-in {
-    animation: fade-in 0.8s ease-out;
+  color: white !important;
 }
 
 #help-modal-text {
-    color: white !important;
+  color: white !important;
 }
-
 #model-output {
-    color: white !important;
+  color: white !important;
 }
-
 #user-message {
-    color: white !important;
+  color: white !important;
 }
 
-/* Login container theming */
+/* =====================
+   Dot-Flashing Loader
+   ===================== */
+.dot-flashing {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  animation: dotFlashing 1s infinite linear alternate;
+}
+body:not(.dark-mode) .dot-flashing {
+  background-color: #18181b;
+}
+body:not(.dark-mode) .dot-flashing::before,
+body:not(.dark-mode) .dot-flashing::after {
+  background-color: #18181b;
+}
+.dot-flashing::before, .dot-flashing::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+}
+.dot-flashing::before {
+  left: -15px;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.2s;
+}
+.dot-flashing::after {
+  left: 15px;
+  animation: dotFlashing 1s infinite linear alternate;
+  animation-delay: 0.4s;
+}
+@keyframes dotFlashing {
+  0% { opacity: 0.2; }
+  100% { opacity: 1; }
+}
+
+/* =====================
+   Animations
+   ===================== */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.8s ease-out;
+}
+
+/* =====================
+   Login Page Styling
+   ===================== */
 .login-container.bg-neutral-100 {
   background: #f3f4f6 !important; /* light gray */
   color: #18181b !important;
@@ -146,4 +165,16 @@ html.dark-mode #user-input {
 .login-container.bg-neutral-800 {
   background: #23232a !important;
   color: #fff !important;
+}
+body:not(.dark-mode) .login-container p.text-neutral-400 {
+  color: #334155 !important; /* slate-700 for better contrast in light mode */
+}
+
+/* =====================
+   Responsive: Hide Theme Toggle on Mobile
+   ===================== */
+@media (max-width: 767px) {
+  #theme-toggle {
+    display: none !important;
+  }
 }
