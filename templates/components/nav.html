@@ -1,21 +1,21 @@
-<div class="z-50 flex md:flex-col gap-3 absolute top-6 left-3 md:left-6 w-auto md:w-auto justify-start">
+<div class="z-50 absolute top-6 left-3 md:left-6 w-auto flex flex-row md:flex-col gap-3 justify-start">
     <a href="/login" 
         class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
         <i class="fa-solid fa-right-from-bracket"></i>
     </a>
-    <button id="new-chat-btn" type="button" class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center gap-2">
+    <button id="new-chat-btn" type="button" 
+        class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center gap-2">
         <i class="fa-solid fa-arrows-rotate"></i>
     </button>
-    <!-- md+ only buttons -->
-    <div class="hidden md:flex md:flex-col md:gap-3">
-        {% if is_admin %}
-            <a href="/download" 
-            class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
+    <button id="theme-toggle" type="button" 
+        class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
+        <i class="fa-solid fa-moon"></i>
+    </button>
+
+    {% if is_admin %}
+        <a href="/download" 
+           class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
             <i class="fa-solid fa-download"></i>
-            </a>
-        {% endif %}
-        <button id="theme-toggle" type="button" class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 ml-0">
-            <i class="fa-solid fa-moon"></i>
-        </button>
-    </div>
+        </a>
+    {% endif %}
 </div>

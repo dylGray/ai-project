@@ -6,8 +6,6 @@ const chatForm = document.getElementById('chat-form');
 const userInput = document.getElementById('user-input');
 const headText = document.getElementById('head-text-container');
 
-// chatContainer.classList.remove('bg-neutral-800');
-
 // store the “normal” form classes to restore after first submit
 const normalFormClasses = "mt-4 flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-14";
 
@@ -18,7 +16,7 @@ chatForm.addEventListener('submit', async (e) => {
 
     // if this is the very first message, unhide the chat window and reposition the form
     if (chatBox.classList.contains('hidden')) {
-        // Hide all children of #main-container
+        // hide all children of #main-container
         const mainContainer = document.getElementById('main-container');
         if (mainContainer) {
             Array.from(mainContainer.children).forEach(child => {
@@ -29,16 +27,6 @@ chatForm.addEventListener('submit', async (e) => {
         chatBox.classList.remove('hidden');
         chatForm.className = normalFormClasses;
 
-        const isDark = document.body.classList.contains('dark-mode');
-        // if (isDark) {  
-        //     chatContainer.classList.remove('bg-neutral-100');
-        //     chatContainer.classList.add('bg-neutral-900');
-        // } else {
-        //     chatContainer.classList.remove('bg-neutral-800'); 
-        //     chatContainer.classList.add('bg-neutral-200');  
-        // }
-
-        // chatContainer.classList.add('bg-neutral-800');
         headText.classList.remove('mt-24', 'md:mt-40');
         headText.classList.add('mt-12', 'md:mt-20');
 
@@ -156,18 +144,6 @@ if (themeToggle) {
   themeToggle.addEventListener('click', () => {
     const isDark = document.body.classList.contains('dark-mode');
     setTheme(!isDark);
-
-    // if (chatBox && !chatBox.classList.contains('hidden')) {
-    //   // Chat form has been submitted at least once
-    //   if (document.body.classList.contains('dark-mode')) {
-    //     chatContainer.classList.remove('bg-neutral-200');
-    //     chatContainer.classList.add('bg-neutral-800');
-    //   } else {
-    //     chatContainer.classList.remove('bg-neutral-800');
-    //     chatContainer.classList.add('bg-neutral-200');
-    //   }
-    // }
-
   });
 }
 

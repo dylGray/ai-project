@@ -35,22 +35,20 @@ body.dark-mode, html.dark-mode {
 /* =====================
    Chat Input & Help Button
    ===================== */
-body:not(.dark-mode) #chat-form, html:not(.dark-mode) #chat-form {
-  background: rgba(255,255,255,0.8) !important; 
-  backdrop-filter: blur(16px) !important; 
-  border-radius: 1.5rem !important; 
-  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15) !important;
-  border: 1px solid rgba(255,255,255,0.4) !important; 
+body:not(.dark-mode) #chat-form,
+html:not(.dark-mode) #chat-form {
+  background: #ffffff !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 1.5rem !important;
   display: flex !important;
   align-items: center !important;
 }
 
-body.dark-mode #chat-form, html.dark-mode #chat-form {
-  background: rgba(36, 39, 48, 0.75) !important; 
-  backdrop-filter: blur(16px) !important; 
+body.dark-mode #chat-form,
+html.dark-mode #chat-form {
+  background: #242730 !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 1.5rem !important;
-  box-shadow: 0 8px 32px 0 rgba(31,38,135,0.15) !important;
-  border: 1px solid rgba(255,255,255,0.08) !important; 
   display: flex !important;
   align-items: center !important;
 }
@@ -169,12 +167,13 @@ body:not(.dark-mode) .dot-flashing::after {
 body:not(.dark-mode) .login-container p.text-neutral-400 {
   color: #334155 !important; /* slate-700 for better contrast in light mode */
 }
-
-/* =====================
-   Responsive: Hide Theme Toggle on Mobile
-   ===================== */
-@media (max-width: 767px) {
-  #theme-toggle {
-    display: none !important;
-  }
+body:not(.dark-mode) .login-container input[type="email"] {
+  background: #fff !important;
+  color: #18181b !important;
+}
+body:not(.dark-mode) .login-container input[type="email"]::placeholder {
+  color: #64748b !important; /* slate-400 */
+}
+body:not(.dark-mode) .login-container .signin-btn {
+  color: #fff !important;
 }

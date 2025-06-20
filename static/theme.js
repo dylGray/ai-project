@@ -1,4 +1,6 @@
-// Theme toggle logic for login page
+'use strict';
+
+// theme toggle logic for login page
 const themeToggle = document.getElementById('theme-toggle');
 const themeToggleText = document.getElementById('theme-toggle-text');
 const loginContainer = document.querySelector('.login-container');
@@ -13,7 +15,9 @@ function setTheme(dark) {
             loginContainer.classList.remove('bg-neutral-100', 'text-neutral-900');
             loginContainer.classList.add('bg-neutral-800', 'text-white');
         }
+
         localStorage.setItem('theme', 'dark');
+        
         } else {
         document.body.classList.remove('dark-mode');
         document.documentElement.classList.remove('dark-mode');
@@ -23,6 +27,7 @@ function setTheme(dark) {
             loginContainer.classList.remove('bg-neutral-800', 'text-white');
             loginContainer.classList.add('bg-neutral-100', 'text-neutral-900');
         }
+
         localStorage.setItem('theme', 'light');
     }
 }
@@ -34,7 +39,7 @@ if (themeToggle) {
     });
 }
 
-// On load, set theme from localStorage or system preference
+// on load, set theme from localStorage or system preference
 (function() {
     const saved = localStorage.getItem('theme');
     if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {

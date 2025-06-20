@@ -4,9 +4,8 @@
 // this is a non-standard API, so it may not work in all browsers
 
 const micButton = document.getElementById("mic-button");
-
-// Add this after your DOM elements are defined
 const sendButton = document.getElementById('send-button');
+
 userInput.addEventListener('input', () => {
   if (userInput.value.trim().length > 0) {
     sendButton.classList.remove('hidden');
@@ -54,7 +53,7 @@ if ('webkitSpeechRecognition' in window) {
   recognition.onend = async () => {
     if (finalTranscript.trim().length > 0) {
       let processed = finalTranscript.trim();
-      // Send to backend for punctuation/capitalization
+      // send to backend for punctuation/capitalization
       try {
         const response = await fetch('/clean', {
           method: 'POST',

@@ -7,18 +7,6 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='styles/main.css') }}">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <style>
-    body:not(.dark-mode) .login-container input[type="email"] {
-      background: #fff !important;
-      color: #18181b !important;
-    }
-    body:not(.dark-mode) .login-container input[type="email"]::placeholder {
-      color: #64748b !important; /* slate-400 */
-    }
-    body:not(.dark-mode) .login-container .signin-btn {
-      color: #fff !important;
-    }
-  </style>
 </head>
 <body class="bg-neutral-900 text-white flex items-center justify-center min-h-screen px-4">
   <div class="fixed top-4 left-4 z-50">
@@ -58,6 +46,6 @@
       © 2025 Priority Pitch. All rights reserved.
     </p>
   </div>
-  <script src="{{ url_for('static', filename='login.js') }}"></script>
+  <script src="{{ url_for('static', filename='theme.js') }}"></script>
 </body>
 </html>
