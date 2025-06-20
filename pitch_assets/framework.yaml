@@ -1,54 +1,52 @@
 overview:
-  description: >
+  summary: >
     A Priority Pitch is a concise pitch (100–150 words, max 170) that presents:
     - The prospect as the protagonist
     - A threat as the antagonist
     - The seller’s solution as the hero
 
-core_principles:
-  narrative_perspective: "Second person (\"you\")"
-  reading_level: "3rd to 6th grade (ideal: 4th–5th)"
-  delivery_style: "Natural when spoken aloud"
-  tone: "Conversational, clear, emotionally engaging"
+principles:
+  - name: "Narrative Perspective"
+    rule: "Use second person ('you')"
+  - name: "Reading Level"
+    rule: "Target 3rd to 6th grade (ideal: 4th–5th)"
+  - name: "Delivery Style"
+    rule: "Natural when spoken aloud"
+  - name: "Tone"
+    rule: "Conversational, clear, emotionally engaging"
 
 components:
   - name: "Pain"
-    description: >
-      Describe the prospect’s daily frustrations in their role.
-      Must be emotional, tangible, and specific — not generic.
-      Sets up why change is needed.
+    goal: "Describe the prospect’s daily frustrations in their role"
+    must_include: "Emotional, tangible, specific language — not generic"
+    importance: "Sets up why change is needed"
 
   - name: "Threat"
-    description: >
-      Reveal the deeper business consequence tied to the pain.
-      Should feel urgent and strategic.
-      Answers the question: “So what?”
+    goal: "Reveal the deeper business consequence tied to the pain"
+    must_include: "Urgent, strategic consequence"
+    importance: "Answers the question: 'So what?'"
 
   - name: "Belief Statement"
-    description: >
-      Builds trust by aligning with the prospect’s worldview.
-      Must start with “We believe you…” and focus on the prospect.
+    goal: "Build trust by aligning with the prospect’s worldview"
+    must_include: "Start with 'We believe you...'; focus on the prospect"
+    importance: "Builds trust and emotional connection"
 
   - name: "Relief"
-    description: >
-      Describes how your solution addresses the threat.
-      Avoid listing features; focus on strategic outcome and value.
+    goal: "Describe how your solution resolves the threat"
+    must_include: "Strategic outcome and value, not feature lists"
+    importance: "Closes the loop and provides hope"
 
   - name: "Tone"
-    description: >
-      Simple, human, emotionally engaging.
-      Avoid jargon and robotic phrasing.
+    goal: "Maintain an emotionally engaging tone"
+    must_include: "Clear, simple, human language"
+    importance: "Ensures the pitch is likable and effective"
 
   - name: "Length"
-    description: >
-      Ideal: 100–150 words. Max: 170.
-      Concise and to the point, no fluff.
+    goal: "Be concise and to the point"
+    must_include: "100–150 words ideally, 170 max"
+    importance: "Prevents rambling or over-explaining"
 
   - name: "Clarity"
-    description: >
-      Must be easy to say aloud.
-      Avoid awkward phrasing or run-ons.
-
-examples_reference:
-  description: |
-    For canonical examples of good and bad Priority Pitches, see pitch_assets/examples.yaml. These examples are used to illustrate the application of the framework and grading criteria in real-world scenarios. The AI model should use these as reference points for evaluation and feedback.
+    goal: "Ensure the pitch is easy to speak aloud"
+    must_include: "Avoid awkward or overly complex phrasing"
+    importance: "Verbal delivery should feel natural"

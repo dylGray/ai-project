@@ -1,33 +1,47 @@
 criteria:
   - name: "Pain"
-    signal: "Specific, emotional frustration the prospect experiences in their role"
+    required: true
+    signal: "Specific, emotional frustration the prospect experiences"
+    rationale: "Builds empathy and personal relevance"
     example: "Your reps are exhausted from chasing dead-end leads."
 
   - name: "Threat"
-    signal: "Strategic risk or consequence resulting from the pain"
-    example: "That burnout is costing you deals — and you're losing top performers as a result."
+    required: true
+    signal: "Strategic risk or consequence from the pain"
+    rationale: "Moves the pitch to a business-level urgency"
+    example: "That burnout is costing you deals — and you're losing top performers."
 
   - name: "Belief Statement"
-    signal: "Starts with 'We believe you...', focuses on prospect, not seller"
-    example: "We believe you deserve better access to the right deals — not just more activity."
+    required: true
+    signal: "Starts with 'We believe you...'; focused on prospect"
+    rationale: "Builds trust and perspective alignment"
+    example: "We believe you deserve better access to the right deals."
 
   - name: "Relief"
-    signal: "Solution to the threat, not just a list of features"
-    example: "We help teams engage decision-makers earlier, so reps win more — without burning out."
+    required: true
+    signal: "Solves the threat clearly and emotionally"
+    rationale: "Ties the pitch together"
+    example: "We help teams engage decision-makers earlier so reps win more."
 
   - name: "Tone"
-    signal: "Clear, emotional, conversational, at a 3rd–6th grade level"
+    required: true
+    signal: "Conversational, emotionally engaging, 3rd–6th grade level"
+    rationale: "Improves delivery and accessibility"
     example: "Short sentences, active voice, empathetic tone."
 
   - name: "Length"
-    signal: "100–150 words, max 170; concise and complete"
+    required: true
+    signal: "100–150 words, max 170"
+    rationale: "Keeps the pitch tight and engaging"
     example: "Avoids repetition and over-explaining."
 
   - name: "Clarity"
+    required: true
     signal: "Easily speakable aloud, natural phrasing"
+    rationale: "Prevents tripping over phrasing when spoken"
     example: "Flows conversationally and avoids complex transitions."
 
-evaluation_notes:
-  - "All 7 elements are required."
+notes:
+  - "All 7 elements are required to be evaluated."
   - "Grade strictly for structure, clarity, and alignment."
   - "Do not offer revision guidance or encouragement."

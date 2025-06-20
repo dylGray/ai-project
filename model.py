@@ -24,16 +24,36 @@ def load_yaml(path):
         return {}
 
 def build_system_prompt():
-    '''Builds an efficient, structured system prompt pitch_assets.'''
+    '''Builds an efficient, structured system prompt from pitch_assets.'''
     framework = load_yaml("pitch_assets/framework.yaml")
     grading = load_yaml("pitch_assets/grading.yaml")
     examples = load_yaml("pitch_assets/examples.yaml")
 
-    pitch_examples = examples.get("pitches", [])
-    good_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "") == "good"]
-    bad_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "") == "bad"]
+    # framework overview
+    overview = framework.get("overview", {}).get("summary", "")
 
-    # format examples for prompt
+    # principles
+    principles = framework.get("principles", [])
+    principles_str = "\n".join(f"- {p['name']}: {p['rule']}" for p in principles)
+
+    # components
+    components = framework.get("components", [])
+    components_str = "\n".join(
+        f"- {c['name']}: {c['goal']} (Must include: {c['must_include']})" for c in components
+    )
+
+    # grading criteria
+    criteria = grading.get("criteria", [])
+    criteria_str = "\n".join(
+        f"- {c['name']}: {c['signal']}\n  Example: {c['example']}" for c in criteria
+    )
+
+    # notes
+    notes = grading.get("notes", [])
+    notes_str = "\n".join(f"- {n}" for n in notes)
+
+    # Examples
+    pitch_examples = examples.get("pitches", [])
     def format_examples(examples, kind):
         if not examples:
             return ""
@@ -41,15 +61,28 @@ def build_system_prompt():
         for ex in examples:
             out += f"Title: {ex.get('title', '')}\n"
             out += f"Audience: {ex.get('audience', '')}\n"
+            out += f"Word Count: {ex.get('word_count', '')}\n"
+            out += f"Reading Level: {ex.get('reading_level', '')}\n"
             out += f"Pitch:\n{ex.get('content', '').strip()}\n"
-            if kind == "Good":
+            eval_type = ex.get('evaluation', {}).get('type', '').lower()
+            if eval_type == "good":
                 strengths = ex.get('evaluation', {}).get('strengths', [])
                 if strengths:
                     out += "Strengths: " + "; ".join(strengths) + "\n"
                 improvements = ex.get('evaluation', {}).get('improvements', [])
                 if improvements:
                     out += "Possible Improvements: " + "; ".join(improvements) + "\n"
-            else:
+            elif eval_type == "ok":
+                strengths = ex.get('evaluation', {}).get('strengths', [])
+                if strengths:
+                    out += "Strengths: " + "; ".join(strengths) + "\n"
+                weaknesses = ex.get('evaluation', {}).get('weaknesses', [])
+                if weaknesses:
+                    out += "Weaknesses: " + "; ".join(weaknesses) + "\n"
+                improvements = ex.get('evaluation', {}).get('improvements', [])
+                if improvements:
+                    out += "Suggested Improvements: " + "; ".join(improvements) + "\n"
+            elif eval_type == "bad":
                 weaknesses = ex.get('evaluation', {}).get('weaknesses', [])
                 if weaknesses:
                     out += "Weaknesses: " + "; ".join(weaknesses) + "\n"
@@ -59,42 +92,31 @@ def build_system_prompt():
             out += "\n"
         return out
 
-    # format core principles and components
-    core_principles = "\n".join(
-        f"- {key.replace('_', ' ').title()}: {value}" for key, value in framework.get("core_principles", {}).items()
-    )
-    components = "\n".join(
-        f"- {comp['name']}: {comp['description']}" for comp in framework.get("components", [])
-    )
-    evaluation_criteria = "\n".join(
-        f"{c['name']}: {c['signal']}\nExample: {c['example']}\n" for c in grading.get("criteria", [])
-    )
-    response_format = "\n".join(
-        f"**{c['name']}** Your detailed evaluation" for c in grading.get("criteria", [])
-    )
-    canonical_examples_ref = ""
-    if framework.get("examples_reference"):
-        canonical_examples_ref = f"\n== Canonical Examples Reference ==\n{framework['examples_reference'].get('description', '')}"
+    good_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "good"]
+    ok_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "ok"]
+    bad_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "bad"]
 
+    # Prompt assembly
     prompt = f"""
-    You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.
-    You have access to the full Priority Pitch framework, grading criteria, and canonical examples of good and bad pitches. Use all of these resources to inform your evaluation and feedback.
+You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.
+You have access to the full Priority Pitch framework, grading criteria, and canonical examples of good and bad pitches. Use all of these resources to inform your evaluation and feedback.
 
-    == Framework Overview ==
-    {framework.get('overview', {}).get('description', '')}
+== Framework Overview ==
+{overview}
 
-    == Core Principles ==
-    {core_principles}
+== Principles ==
+{principles_str}
 
-    == Required Components ==
-    {components}
-    {canonical_examples_ref}
+== Required Components ==
+{components_str}
 
-    == Evaluation Criteria ==
-    {evaluation_criteria}
-    {format_examples(good_examples, 'Good')}{format_examples(bad_examples, 'Bad')}Respond in this exact format:
-    {response_format}
-    """
+== Grading Criteria ==
+{criteria_str}
+
+== Grading Notes ==
+{notes_str}
+{format_examples(good_examples, 'Good')}{format_examples(ok_examples, 'OK')}{format_examples(bad_examples, 'Bad')}
+"""
     return prompt
 
 def build_fallback_system_prompt():
