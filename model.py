@@ -52,7 +52,7 @@ def build_system_prompt():
     notes = grading.get("notes", [])
     notes_str = "\n".join(f"- {n}" for n in notes)
 
-    # Examples
+    # examples
     pitch_examples = examples.get("pitches", [])
     def format_examples(examples, kind):
         if not examples:
