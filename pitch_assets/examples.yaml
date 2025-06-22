@@ -1,7 +1,7 @@
 pitches:
   - title: "Financial Exec Facing Margin Pressure"
     audience: "CFO or financial executive"
-    word_count: 138
+    word_count: 139
     reading_level: "4th grade"
     content: | 
       Your costs are climbing and margins are under pressure. You’re asked to do more with less—and everyone’s watching how you’ll respond.
@@ -22,7 +22,7 @@ pitches:
 
   - title: "Ops Leader Facing Growing Backlog"
     audience: "VP of Operations"
-    word_count: 132
+    word_count: 134
     reading_level: "5th grade"
     content: | 
       Backlogs keep growing. Customers are frustrated. And inside your walls, people are burned out from trying to do too much with too little. You’re doing everything you can to hold the line—but it’s not sustainable.
@@ -41,7 +41,7 @@ pitches:
 
   - title: "Priority Sale Pitch to Executive"
     audience: "High-level executive"
-    word_count: 153
+    word_count: 155
     reading_level: "6th grade"
     content: |
       Your business requires revenue. Hitting your goals is never easy. It certainly is costing a lot to do. And while you’re probably making sales, you might wonder if your sales team is doing a lot of high-value selling.
@@ -63,7 +63,7 @@ pitches:
 
   - title: "IT Services for Compliance Management"
     audience: "CIO / Compliance manager"
-    word_count: 154
+    word_count: 158
     reading_level: "6th grade"
     content: |
       Managing compliance across legacy systems is a full-time job—and you already have one. Miss one audit trail, and you’re in the headlines. Regulators don’t care that your team is stretched thin or that your systems are outdated. The risks are real, and they’re growing.
@@ -89,7 +89,7 @@ pitches:
 
   - title: "Pitch for a Hiring Platform"
     audience: "HR Director"
-    word_count: 109
+    word_count: 114
     reading_level: "5th grade"
     content: |
       Finding good people isn’t easy. You post, you wait, and you hope the right person applies.
@@ -116,7 +116,7 @@ pitches:
 
   - title: "Pitch to Marketing Manager for Analytics Tool"
     audience: "Marketing Manager"
-    word_count: 118
+    word_count: 123
     reading_level: "6th grade"
     content: |
       Your leadership wants proof. But all you have is noise.
@@ -143,7 +143,7 @@ pitches:
 
   - title: "Priority Sale Pitch Using Jargon"
     audience: "Sales enablement manager"
-    word_count: 135
+    word_count: 137
     reading_level: "8th grade"
     content: |
       The Priority Sale is an innovative methodology for enterprise-grade sales transformation, engineered to enable higher ROI through the strategic optimization of cross-functional funnel dynamics and stakeholder-aligned value delivery frameworks. By leveraging predictive engagement strategies, dynamic qualification checkpoints, and behavioral data enrichment, your team can maximize revenue capture and reduce friction across the deal lifecycle.
@@ -151,7 +151,6 @@ pitches:
       Our proprietary approach includes modularized enablement pathways, pre-configured CRM and ERP integrations, and AI-powered coaching protocols. This comprehensive enablement stack facilitates scalable onboarding, drives systemic seller behavior change, and accelerates attainment of sales productivity benchmarks across all revenue segments.
 
       With a proven track record in hyper-competitive B2B verticals, our go-to-market system delivers quantifiable success and continuous performance uplift. Unlock the next frontier in pipeline velocity and sales effectiveness with The Priority Sale—a turnkey, future-forward solution engineered for sellers at scale and speed.
-
     evaluation:
       type: "bad"
       weaknesses:
@@ -166,7 +165,7 @@ pitches:
 
   - title: "Too Feature-Focused CRM Pitch"
     audience: "Sales Manager"
-    word_count: 151
+    word_count: 156
     reading_level: "10th grade"
     content: |
       Our CRM integrates seamlessly with over 35 business-critical applications and offers customizable dashboards, real-time analytics, AI-powered lead insights, and robust multichannel reporting.
@@ -192,7 +191,7 @@ pitches:
 
   - title: "Abstract Vision Pitch"
     audience: "Business Strategy VP"
-    word_count: 141
+    word_count: 145
     reading_level: "8th grade"
     content: |
       In a rapidly evolving digital landscape, maintaining strategic agility is no longer optional—it's imperative. Our solutions empower holistic transformation through insight-driven platforms that leverage cross-functional intelligence, synergistic frameworks, and scalable architecture to anticipate shifting market dynamics and respond effectively to competitive pressures.
