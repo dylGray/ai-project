@@ -176,3 +176,15 @@ if (themeToggle) {
     setTheme(false);
   }
 })();
+
+// Show send button only when input is not empty
+const sendButton = document.getElementById('send-button');
+if (userInput && sendButton) {
+  userInput.addEventListener('input', function() {
+    if (userInput.value.trim().length > 0) {
+      sendButton.classList.remove('hidden');
+    } else {
+      sendButton.classList.add('hidden');
+    }
+  });
+}
