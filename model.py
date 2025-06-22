@@ -54,43 +54,45 @@ def build_system_prompt():
 
     # examples
     pitch_examples = examples.get("pitches", [])
+
     def format_examples(examples, kind):
+        '''Formats examples for the system prompt.'''
         if not examples:
             return ""
-        out = f"\n== {kind} Elevator Pitch Example(s) ==\n"
+        example_output = f"\n== {kind} Elevator Pitch Example(s) ==\n"
         for ex in examples:
-            out += f"Title: {ex.get('title', '')}\n"
-            out += f"Audience: {ex.get('audience', '')}\n"
-            out += f"Word Count: {ex.get('word_count', '')}\n"
-            out += f"Reading Level: {ex.get('reading_level', '')}\n"
-            out += f"Pitch:\n{ex.get('content', '').strip()}\n"
+            example_output += f"Title: {ex.get('title', '')}\n"
+            example_output += f"Audience: {ex.get('audience', '')}\n"
+            example_output += f"Word Count: {ex.get('word_count', '')}\n"
+            example_output += f"Reading Level: {ex.get('reading_level', '')}\n"
+            example_output += f"Pitch:\n{ex.get('content', '').strip()}\n"
             eval_type = ex.get('evaluation', {}).get('type', '').lower()
             if eval_type == "good":
                 strengths = ex.get('evaluation', {}).get('strengths', [])
                 if strengths:
-                    out += "Strengths: " + "; ".join(strengths) + "\n"
+                    example_output += "Strengths: " + "; ".join(strengths) + "\n"
                 improvements = ex.get('evaluation', {}).get('improvements', [])
                 if improvements:
-                    out += "Possible Improvements: " + "; ".join(improvements) + "\n"
+                    example_output += "Possible Improvements: " + "; ".join(improvements) + "\n"
             elif eval_type == "ok":
                 strengths = ex.get('evaluation', {}).get('strengths', [])
                 if strengths:
-                    out += "Strengths: " + "; ".join(strengths) + "\n"
+                    example_output += "Strengths: " + "; ".join(strengths) + "\n"
                 weaknesses = ex.get('evaluation', {}).get('weaknesses', [])
                 if weaknesses:
-                    out += "Weaknesses: " + "; ".join(weaknesses) + "\n"
+                    example_output += "Weaknesses: " + "; ".join(weaknesses) + "\n"
                 improvements = ex.get('evaluation', {}).get('improvements', [])
                 if improvements:
-                    out += "Suggested Improvements: " + "; ".join(improvements) + "\n"
+                    example_output += "Suggested Improvements: " + "; ".join(improvements) + "\n"
             elif eval_type == "bad":
                 weaknesses = ex.get('evaluation', {}).get('weaknesses', [])
                 if weaknesses:
-                    out += "Weaknesses: " + "; ".join(weaknesses) + "\n"
+                    example_output += "Weaknesses: " + "; ".join(weaknesses) + "\n"
                 improvements = ex.get('evaluation', {}).get('improvements', [])
                 if improvements:
-                    out += "How to Improve: " + "; ".join(improvements) + "\n"
-            out += "\n"
-        return out
+                    example_output += "How to Improve: " + "; ".join(improvements) + "\n"
+            example_output += "\n"
+        return example_output
 
     good_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "good"]
     ok_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "ok"]
@@ -127,12 +129,11 @@ def build_fallback_system_prompt():
         "  1. If the user is asking a question or just chatting, respond normally—",
         "     answer their question, engage in small talk, or be helpful.\n",
         "  2. If the user asks for help, advice, or suggestions on writing, revising, or improving their elevator pitch, respond strictly with: ",
-        '     \"I cannot help you with your elevator pitch. My only functionality is to evaluate your elevator pitch based on The Priority Sales methodology.\"\n',
+        '     "I cannot help you with your elevator pitch. My only functionality is to evaluate your elevator pitch based on The Priority Sales methodology."\n',
         "  3. At the end of your response, once you have addressed the user’s actual message, ",
         "softly remind them that this tool’s main purpose is to evaluate elevator pitches, not improve them or provide feedback. ",
         "Be warm and natural. Do not lecture or judge; simply answer and then funnel them back.\n"
     ]
-    
     return "".join(lines)
 
 def is_valid_pitch(user_input):
@@ -151,7 +152,6 @@ def is_valid_pitch(user_input):
             return {"is_pitch": False, "reason": "Placeholder"}
     if len(normalized) < 15:
         return {"is_pitch": False, "reason": "Placeholder"}
-
     classification_prompt = [
         {
             "role": "system",
@@ -168,7 +168,6 @@ def is_valid_pitch(user_input):
         },
         {"role": "user", "content": user_input}
     ]
-
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo-0125",

@@ -7,7 +7,7 @@ const userInput = document.getElementById('user-input');
 const headText = document.getElementById('head-text-container');
 
 // store the “normal” form classes to restore after first submit
-const normalFormClasses = "mt-4 flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-14";
+const normalFormClasses = "mt-4 flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-20";
 
 chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ chatForm.addEventListener('submit', async (e) => {
     thinkingIndicator.className = "text-left flex items-center space-x-2";
     thinkingIndicator.innerHTML = `
       <div class="inline-block px-4 py-2 rounded-lg">
-        <div class="dot-flashing"></div>
+        <div class="pulsing-dot"></div>
       </div>
     `;
     chatBox.appendChild(thinkingIndicator);
@@ -106,6 +106,17 @@ chatForm.addEventListener('submit', async (e) => {
     chatBox.scrollTop = chatBox.scrollHeight;
 });
 
+// Mobile placeholder logic
+function setInputPlaceholder() {
+    if (window.innerWidth < 768) {
+        userInput.placeholder = "Tap mic to start your pitch...";
+    } else {
+        userInput.placeholder = "Click the mic to start your pitch, click again to end your pitch...";
+    }
+}
+setInputPlaceholder();
+window.addEventListener('resize', setInputPlaceholder);
+
 const refreshBtn = document.getElementById('refresh-chat-btn');
 if (refreshBtn) {
     refreshBtn.addEventListener('click', () => {
@@ -131,12 +142,21 @@ function setTheme(dark) {
     document.documentElement.classList.add('dark-mode');
     if (themeToggle) themeToggle.querySelector('i').className = 'fa-solid fa-sun';
     localStorage.setItem('theme', 'dark');
-    
+    // Set mic/send button backgrounds for dark mode
+    document.querySelectorAll('#mic-button, #send-button').forEach(btn => {
+      btn.classList.remove('bg-neutral-150');
+      btn.classList.add('bg-neutral-700');
+    });
   } else {
     document.body.classList.remove('dark-mode');
     document.documentElement.classList.remove('dark-mode');
     if (themeToggle) themeToggle.querySelector('i').className = 'fa-solid fa-moon';
     localStorage.setItem('theme', 'light');
+    // Set mic/send button backgrounds for light mode
+    document.querySelectorAll('#mic-button, #send-button').forEach(btn => {
+      btn.classList.remove('bg-neutral-700');
+      btn.classList.add('bg-neutral-150');
+    });
   }
 }
 

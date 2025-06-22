@@ -7,15 +7,14 @@
         class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center gap-2">
         <i class="fa-solid fa-arrows-rotate"></i>
     </button>
-    <button id="theme-toggle" type="button" 
-        class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
-        <i class="fa-solid fa-moon"></i>
-    </button>
-
     {% if is_admin %}
         <a href="/download" 
            class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
             <i class="fa-solid fa-download"></i>
         </a>
     {% endif %}
+    <button id="theme-toggle" type="button" 
+        class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
+        <i class="fa-solid fa-moon"></i>
+    </button>
 </div>
