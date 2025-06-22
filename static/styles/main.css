@@ -103,7 +103,7 @@ html.dark-mode #user-input {
 }
 
 /* =====================
-   Dot-Flashing Loader
+   Dot-Flashing
    ===================== */
 .dot-flashing {
   position: relative;
@@ -143,6 +143,30 @@ body:not(.dark-mode) .dot-flashing::after {
 @keyframes dotFlashing {
   0% { opacity: 0.2; }
   100% { opacity: 1; }
+}
+
+.pulsing-dot-red {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #ef4444;
+  border-radius: 50%;
+  box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  animation: pulse-red 1s infinite;
+  vertical-align: middle;
+  margin-left: 10px;
+  padding-right: 10px;
+}
+@keyframes pulse-red {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
 }
 
 /* =====================

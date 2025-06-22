@@ -7,7 +7,7 @@ const userInput = document.getElementById('user-input');
 const headText = document.getElementById('head-text-container');
 
 // store the “normal” form classes to restore after first submit
-const normalFormClasses = "mt-4 flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-lg h-20";
+const normalFormClasses = "mt-4 flex items-center bg-neutral-700 rounded-full px-4 py-2 shadow-md h-20";
 
 chatForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -37,9 +37,6 @@ chatForm.addEventListener('submit', async (e) => {
 
         const refreshContainer = document.getElementById('refresh-container');
         if (refreshContainer) refreshContainer.classList.remove('hidden');
-
-        const sendButton = document.getElementById('send-button');
-        if (sendButton) sendButton.classList.add('hidden');
     }
 
     chatBox.innerHTML += `
@@ -57,6 +54,11 @@ chatForm.addEventListener('submit', async (e) => {
     }
 
     chatBox.scrollTop = chatBox.scrollHeight;
+
+    const sendButton = document.getElementById('send-button');
+    if (sendButton) {
+      sendButton.classList.toggle('hidden', userInput.value.trim() === '');
+    }
 
     // “thinking” indicator
     const thinkingIndicator = document.createElement('div');
@@ -106,12 +108,12 @@ chatForm.addEventListener('submit', async (e) => {
     chatBox.scrollTop = chatBox.scrollHeight;
 });
 
-// Mobile placeholder logic
+// mobile placeholder logic
 function setInputPlaceholder() {
     if (window.innerWidth < 768) {
-        userInput.placeholder = "Tap mic to start your pitch...";
+        userInput.placeholder = "Press the mic to start your pitch";
     } else {
-        userInput.placeholder = "Click the mic to start your pitch, click again to end your pitch...";
+        userInput.placeholder = "Click the mic to start your pitch, click again to end your pitch.";
     }
 }
 setInputPlaceholder();
@@ -132,7 +134,6 @@ if (newChatBtn) {
     });
 }
 
-// Theme toggle logic
 const themeToggle = document.getElementById('theme-toggle');
 const themeToggleText = document.getElementById('theme-toggle-text');
 
@@ -140,19 +141,22 @@ function setTheme(dark) {
   if (dark) {
     document.body.classList.add('dark-mode');
     document.documentElement.classList.add('dark-mode');
+
     if (themeToggle) themeToggle.querySelector('i').className = 'fa-solid fa-sun';
     localStorage.setItem('theme', 'dark');
-    // Set mic/send button backgrounds for dark mode
+
     document.querySelectorAll('#mic-button, #send-button').forEach(btn => {
       btn.classList.remove('bg-neutral-150');
       btn.classList.add('bg-neutral-700');
     });
+
   } else {
     document.body.classList.remove('dark-mode');
     document.documentElement.classList.remove('dark-mode');
+
     if (themeToggle) themeToggle.querySelector('i').className = 'fa-solid fa-moon';
     localStorage.setItem('theme', 'light');
-    // Set mic/send button backgrounds for light mode
+
     document.querySelectorAll('#mic-button, #send-button').forEach(btn => {
       btn.classList.remove('bg-neutral-700');
       btn.classList.add('bg-neutral-150');
@@ -167,7 +171,7 @@ if (themeToggle) {
   });
 }
 
-// On load, set theme from localStorage or system preference
+// on load, set theme from localStorage or system preference
 (function() {
   const saved = localStorage.getItem('theme');
   if (saved === 'dark' || (!saved && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -176,15 +180,3 @@ if (themeToggle) {
     setTheme(false);
   }
 })();
-
-// Show send button only when input is not empty
-const sendButton = document.getElementById('send-button');
-if (userInput && sendButton) {
-  userInput.addEventListener('input', function() {
-    if (userInput.value.trim().length > 0) {
-      sendButton.classList.remove('hidden');
-    } else {
-      sendButton.classList.add('hidden');
-    }
-  });
-}
