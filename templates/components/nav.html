@@ -18,3 +18,13 @@
         <i class="fa-solid fa-moon"></i>
     </button>
 </div>
+
+<!-- Desktop only: User email badge on right -->
+{% if session and session.get('user_email') %}
+<div class="hidden md:flex fixed top-6 right-6 items-center gap-2 z-50">
+    <span class="text-neutral-500 font-medium">Logged in as</span>
+    <span class="bg-blue-600 text-white font-semibold px-4 py-2 rounded-full shadow text-sm">{{ session['user_email'] }}</span>
+</div>
+{% else %}
+print("No user email found in session.")
+{% endif %}

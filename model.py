@@ -1,5 +1,3 @@
-# this file handles AI prompt logic, model utilities, and rules
-
 import os
 import json
 import yaml
@@ -15,19 +13,26 @@ if not api_key:
 
 client = OpenAI(api_key=api_key)
 
-def load_yaml(path):
+@lru_cache(maxsize=8)
+def load_yaml_cached(path):
+    '''Loads and caches YAML files'''
     try:
-        with open(path, "r") as f:
-            return yaml.safe_load(f)
+        with open(path, "r", encoding="utf-8") as f:
+            content = f.read()
+        if not content.endswith("\n"):
+            content += "\n"
+            with open(path, "w", encoding="utf-8") as f_out:
+                f_out.write(content)
+        return yaml.safe_load(content)
     except Exception as e:
         print(f"Warning: Could not load {path}: {e}")
         return {}
 
 def build_system_prompt():
     '''Builds an efficient, structured system prompt from pitch_assets.'''
-    framework = load_yaml("pitch_assets/framework.yaml")
-    grading = load_yaml("pitch_assets/grading.yaml")
-    examples = load_yaml("pitch_assets/examples.yaml")
+    framework = load_yaml_cached("pitch_assets/framework.yaml")
+    grading = load_yaml_cached("pitch_assets/grading.yaml")
+    examples = load_yaml_cached("pitch_assets/examples.yaml")
 
     # framework overview
     overview = framework.get("overview", {}).get("summary", "")
@@ -101,7 +106,7 @@ def build_system_prompt():
     # Prompt assembly
     prompt = f"""
 You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.
-You have access to the full Priority Pitch framework, grading criteria, and canonical examples of good and bad pitches. Use all of these resources to inform your evaluation and feedback.
+You have access to the full Priority Pitch framework, grading criteria, and canonical examples of good and bad pitches. Use all of these resources to inform your evaluation.
 
 == Framework Overview ==
 {overview}
@@ -117,7 +122,11 @@ You have access to the full Priority Pitch framework, grading criteria, and cano
 
 == Grading Notes ==
 {notes_str}
+
+== Examples ==
 {format_examples(good_examples, 'Good')}{format_examples(ok_examples, 'OK')}{format_examples(bad_examples, 'Bad')}
+
+Your only job is to evaluate elevator pitches according to the above criteria and examples. Do not provide writing advice or revisions.
 """
     return prompt
 
@@ -141,9 +150,8 @@ def is_valid_pitch(user_input):
     Classifies user input as either a pitch or non-pitch, with inline placeholder detection.
     Makes a call to OpenAI's GPT model to classify the input.
     '''
-    placeholders = [
-        "here is my pitch", "my pitch is", "test", "sample", "coming soon", "tbd", "to be added", "n/a", "na", "none", "placeholder", "draft", "lorem ipsum", "write my pitch", "i will write my pitch", "this is my pitch", "pitch", "elevator pitch", "submit", "hello", "hi", "-", "...", "?", "!", "[your pitch here]", "[insert pitch]"
-    ]
+    placeholders = ["here is my pitch", "my pitch is", "test", "sample", "coming soon", "tbd", "to be added", "n/a", "na", "none", "placeholder", "draft", "lorem ipsum", "write my pitch", "i will write my pitch", "this is my pitch", "pitch", "elevator pitch", "submit", "hello", "hi", "-", "...", "?", "!", "[your pitch here]", "[insert pitch]"]
+
     normalized = user_input.strip().lower()
     if normalized in placeholders:
         return {"is_pitch": False, "reason": "Placeholder"}
@@ -194,7 +202,6 @@ def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_t
         print(f"Error fetching completion: {e}")
         return None
 
-# system and fallback prompts with caching for efficiency
 @lru_cache(maxsize=1)
 def get_cached_system_prompt():
     return build_system_prompt()

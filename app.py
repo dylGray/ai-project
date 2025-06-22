@@ -1,5 +1,3 @@
-# this file handles client side logic, routing, and API endpoints
-
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
 from model import build_system_prompt, build_fallback_system_prompt, get_completion_from_messages, is_valid_pitch
 from firestore import save_submission, fetch_all_submissions

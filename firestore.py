@@ -1,5 +1,3 @@
-# this script is used to interact with Cloud Firestore DB for storing and retrieving user submissions
-
 import os
 import re
 import json
