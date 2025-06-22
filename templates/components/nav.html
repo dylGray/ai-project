@@ -9,7 +9,7 @@
     </button>
     {% if is_admin %}
         <a href="/download" 
-           class="hidden md:flex bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
+           class="bg-white text-neutral-900 font-medium px-4 py-2 rounded-lg shadow-md hover:bg-neutral-200 transition duration-200 flex items-center justify-center">
             <i class="fa-solid fa-download"></i>
         </a>
     {% endif %}
@@ -21,7 +21,7 @@
 
 <!-- Desktop only: User email badge on right -->
 {% if session and session.get('email') %}
-<div class="flex fixed top-6 right-6 items-center gap-2 z-50">
+<div class="hidden md:flex fixed top-6 right-6 items-center gap-2 z-50">
     <span class="bg-gradient-to-r from-[#0A84FF] via-blue-500 to-blue-600 text-white font-semibold px-4 py-2 rounded-full shadow text-sm" style="color: #fff !important;">{{ session['email'] }}</span>
 </div>
 {% endif %}
