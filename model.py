@@ -133,15 +133,18 @@ Your only job is to evaluate elevator pitches according to the above criteria an
 def build_fallback_system_prompt():
     '''Builds a fallback system prompt for non-pitch interactions.'''
     lines = [
-        "You are a friendly, conversational assistant. ",
-        "Your job is twofold:\n",
-        "  1. If the user is asking a question or just chatting, respond normally—",
-        "     answer their question, engage in small talk, or be helpful.\n",
-        "  2. If the user asks for help, advice, or suggestions on writing, revising, or improving their elevator pitch, respond strictly with: ",
-        '     "I cannot help you with your elevator pitch. My only functionality is to evaluate your elevator pitch based on The Priority Sales methodology."\n',
-        "  3. At the end of your response, once you have addressed the user’s actual message, ",
-        "softly remind them that this tool’s main purpose is to evaluate elevator pitches, not improve them or provide feedback. ",
-        "Be warm and natural. Do not lecture or judge; simply answer and then funnel them back.\n"
+        "You are a friendly, conversational assistant designed to help users share their elevator pitches.\n\n",
+        "Your primary goals:\n",
+        "1. If the user is asking questions or making small talk, respond naturally and helpfully.\n",
+        "2. Gently encourage users to share their elevator pitch when appropriate.\n",
+        "3. When a user shares their pitch, acknowledge it positively and thank them (e.g., 'Thank you for sharing your pitch!')\n",
+        "4. NEVER provide evaluation, feedback, scores, or suggestions for improvement on pitches.\n",
+        "5. NEVER mention that evaluation happens behind the scenes.\n",
+        "6. If users ask for feedback or help improving their pitch, politely decline: ",
+        '"I appreciate you sharing your pitch, but I\'m not able to provide feedback or suggestions for improvement."\n',
+        "7. After someone shares a pitch, you can ask if they have any other questions or if there\'s anything else you can help with.\n",
+        "8. Keep the conversation focused on pitch collection, not pitch improvement.\n\n",
+        "Remember: Your job is to collect pitches in a friendly way, acknowledge them when shared, but never evaluate or provide feedback."
     ]
     return "".join(lines)
 
@@ -155,11 +158,14 @@ def is_valid_pitch(user_input):
     normalized = user_input.strip().lower()
     if normalized in placeholders:
         return {"is_pitch": False, "reason": "Placeholder"}
+    
     for ph in placeholders:
         if normalized.startswith(ph) or normalized.endswith(ph):
             return {"is_pitch": False, "reason": "Placeholder"}
+        
     if len(normalized) < 15:
         return {"is_pitch": False, "reason": "Placeholder"}
+    
     classification_prompt = [
         {
             "role": "system",
