@@ -61,10 +61,12 @@ def build_system_prompt():
     pitch_examples = examples.get("pitches", [])
 
     def format_examples(examples, kind):
-        '''Formats examples for the system prompt.'''
+        '''Helper function that formats examples for the system prompt.'''
         if not examples:
             return ""
+        
         example_output = f"\n== {kind} Elevator Pitch Example(s) ==\n"
+
         for ex in examples:
             example_output += f"Title: {ex.get('title', '')}\n"
             example_output += f"Audience: {ex.get('audience', '')}\n"
@@ -72,6 +74,7 @@ def build_system_prompt():
             example_output += f"Reading Level: {ex.get('reading_level', '')}\n"
             example_output += f"Pitch:\n{ex.get('content', '').strip()}\n"
             eval_type = ex.get('evaluation', {}).get('type', '').lower()
+
             if eval_type == "good":
                 strengths = ex.get('evaluation', {}).get('strengths', [])
                 if strengths:
@@ -79,6 +82,7 @@ def build_system_prompt():
                 improvements = ex.get('evaluation', {}).get('improvements', [])
                 if improvements:
                     example_output += "Possible Improvements: " + "; ".join(improvements) + "\n"
+
             elif eval_type == "ok":
                 strengths = ex.get('evaluation', {}).get('strengths', [])
                 if strengths:
@@ -89,6 +93,7 @@ def build_system_prompt():
                 improvements = ex.get('evaluation', {}).get('improvements', [])
                 if improvements:
                     example_output += "Suggested Improvements: " + "; ".join(improvements) + "\n"
+
             elif eval_type == "bad":
                 weaknesses = ex.get('evaluation', {}).get('weaknesses', [])
                 if weaknesses:
@@ -97,37 +102,53 @@ def build_system_prompt():
                 if improvements:
                     example_output += "How to Improve: " + "; ".join(improvements) + "\n"
             example_output += "\n"
+
         return example_output
 
     good_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "good"]
     ok_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "ok"]
     bad_examples = [ex for ex in pitch_examples if ex.get("evaluation", {}).get("type", "").lower() == "bad"]
 
-    # Prompt assembly
     prompt = f"""
-You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.
-You have access to the full Priority Pitch framework, grading criteria, and canonical examples of good and bad pitches. Use all of these resources to inform your evaluation.
+    You are an AI trained to strictly evaluate elevator pitches using the Priority Pitch methodology.
+    You have access to the full Priority Pitch framework, grading criteria, and canonical examples of good and bad pitches. Use all of these resources to inform your evaluation.
 
-== Framework Overview ==
-{overview}
+    == Framework Overview ==
+    {overview}
 
-== Principles ==
-{principles_str}
+    == Principles ==
+    {principles_str}
 
-== Required Components ==
-{components_str}
+    == Required Components ==
+    {components_str}
 
-== Grading Criteria ==
-{criteria_str}
+    == Grading Criteria ==
+    {criteria_str}
 
-== Grading Notes ==
-{notes_str}
+    == Grading Notes ==
+    {notes_str}
 
-== Examples ==
-{format_examples(good_examples, 'Good')}{format_examples(ok_examples, 'OK')}{format_examples(bad_examples, 'Bad')}
+    == Examples ==
+    {format_examples(good_examples, 'Good')}{format_examples(ok_examples, 'OK')}{format_examples(bad_examples, 'Bad')}
 
-Your only job is to evaluate elevator pitches according to the above criteria and examples. Do not provide writing advice or revisions.
-"""
+    Your only job is to evaluate elevator pitches according to the above criteria and examples. Do not provide writing advice or revisions.
+    """
+
+    prompt += """
+    == OUTPUT FORMAT ==
+    When evaluating an elevator pitch, respond strictly in the following format:
+
+    Pain [text]
+    Threat [text]
+    Belief Statement: [text]
+    Relief [text]
+    Tone [text]
+    Length [text]
+    Clarity [text]
+
+    If a section does not apply or is not present, use "N/A" and explain what the user should have included.
+    """
+
     return prompt
 
 def build_fallback_system_prompt():
@@ -146,6 +167,7 @@ def build_fallback_system_prompt():
         "8. Keep the conversation focused on pitch collection, not pitch improvement.\n\n",
         "Remember: Your job is to collect pitches in a friendly way, acknowledge them when shared, but never evaluate or provide feedback."
     ]
+
     return "".join(lines)
 
 def is_valid_pitch(user_input):
@@ -157,13 +179,14 @@ def is_valid_pitch(user_input):
 
     normalized = user_input.strip().lower()
     if normalized in placeholders:
+        print("[DEBUG] Input matched placeholder list. Not a valid pitch.")
         return {"is_pitch": False, "reason": "Placeholder"}
-    
     for ph in placeholders:
         if normalized.startswith(ph) or normalized.endswith(ph):
+            print(f"[DEBUG] Input starts or ends with placeholder '{ph}'. Not a valid pitch.")
             return {"is_pitch": False, "reason": "Placeholder"}
-        
     if len(normalized) < 15:
+        print("[DEBUG] Input too short to be a valid pitch.")
         return {"is_pitch": False, "reason": "Placeholder"}
     
     classification_prompt = [
@@ -182,6 +205,7 @@ def is_valid_pitch(user_input):
         },
         {"role": "user", "content": user_input}
     ]
+    
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo-0125",
@@ -189,7 +213,9 @@ def is_valid_pitch(user_input):
             temperature=0,
             max_tokens=50,
         )
-        return json.loads(response.choices[0].message.content.strip())
+        result = json.loads(response.choices[0].message.content.strip())
+        print(f"[DEBUG] is_valid_pitch result: {result}")
+        return result
     except Exception as e:
         print("Error during input classification:", e)
         return {"is_pitch": True, "reason": "Fallback"}
