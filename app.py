@@ -1,5 +1,11 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for, session, Response
-from model import build_system_prompt, build_fallback_system_prompt, get_completion_from_messages, is_valid_pitch
+from model import (
+    build_system_prompt,
+    build_fallback_system_prompt,
+    get_completion_from_messages,
+    is_valid_pitch,
+    summarize_feedback,
+)
 from firestore import save_submission, fetch_all_submissions
 from io import StringIO
 import os
@@ -112,11 +118,24 @@ def download_data():
         return redirect(url_for("index"))
 
     all_submissions = fetch_all_submissions()
+    summary_text = summarize_feedback(all_submissions)
 
     output = StringIO()
     output.write('\ufeff')  
+    output.write('\ufeff')
 
     writer = csv.writer(output)
+
+    if summary_text:
+        writer.writerow(["Summary of Common Weaknesses"])
+        for line in summary_text.splitlines():
+            writer.writerow([line])
+        writer.writerow([])
+
+    # output = StringIO()
+    # output.write('\ufeff')  
+
+    # writer = csv.writer(output)
     writer.writerow(["Email", "Pitch", "Pain", "Threat", "Belief Statement", "Relief", "Tone", "Length", "Clarity", "Submitted At"])
 
     for entry in all_submissions:

@@ -205,7 +205,7 @@ def is_valid_pitch(user_input):
         },
         {"role": "user", "content": user_input}
     ]
-    
+
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo-0125",
@@ -241,3 +241,41 @@ def get_cached_system_prompt():
 @lru_cache(maxsize=1)
 def get_cached_fallback_system_prompt():
     return build_fallback_system_prompt()
+
+def summarize_feedback(submissions):
+    '''Summarizes common weaknesses across multiple pitch evaluations.'''
+    if not submissions:
+        return "No submissions available."
+
+    sections = []
+    for entry in submissions:
+        fb = entry.get("feedback", {})
+        pitch = entry.get("pitch", "")
+        text = (
+            f"Pitch: {pitch}\n"
+            f"Pain: {fb.get('Pain', '')}\n"
+            f"Threat: {fb.get('Threat', '')}\n"
+            f"Belief Statement: {fb.get('Belief Statement', '')}\n"
+            f"Relief: {fb.get('Relief', '')}\n"
+            f"Tone: {fb.get('Tone', '')}\n"
+            f"Length: {fb.get('Length', '')}\n"
+            f"Clarity: {fb.get('Clarity', '')}"
+        )
+        sections.append(text)
+
+    prompt = [
+        {
+            "role": "system",
+            "content": (
+                "You analyze elevator pitch evaluations and identify common areas "
+                "where the pitches struggle. Provide concise bullet points summarizing "
+                "the main patterns you observe."
+            ),
+        },
+        {"role": "user", "content": "\n\n".join(sections)},
+    ]
+
+    summary = get_completion_from_messages(
+        prompt, model="gpt-3.5-turbo-0125", temperature=0.3, max_tokens=300
+    )
+    return summary.strip() if summary else ""
