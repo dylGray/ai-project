@@ -22,6 +22,6 @@
 <!-- Desktop only: User email badge on right -->
 {% if session and session.get('email') %}
 <div class="hidden md:flex fixed top-6 right-6 items-center gap-2 z-50">
-    <span class="bg-gradient-to-r from-[#0A84FF] via-blue-500 to-blue-600 text-white font-semibold px-4 py-2 rounded-full shadow text-sm" style="color: #fff !important;">{{ session['email'] }}</span>
+    <span class="bg-gradient-to-r from-[#0A84FF] via-blue-500 to-blue-600 text-white font-semibold px-3 py-1 rounded-full shadow text-sm" style="color: #fff !important;">{{ session['email'] }}</span>
 </div>
 {% endif %}
