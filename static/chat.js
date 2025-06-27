@@ -113,7 +113,7 @@ function setInputPlaceholder() {
     if (window.innerWidth < 768) {
         userInput.placeholder = "Press the mic to start your pitch";
     } else {
-        userInput.placeholder = "Click the mic to start your pitch, click again to end your pitch.";
+        userInput.placeholder = "Click the mic to start your pitch, click again to end your pitch. You can also type your pitch here.";
     }
 }
 setInputPlaceholder();
