@@ -10,6 +10,7 @@ from firestore import save_submission, fetch_all_submissions
 from io import StringIO
 import os
 import csv
+import traceback
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
@@ -23,9 +24,16 @@ admin_emails = [
 system_prompt = build_system_prompt()
 fallback_system_prompt = build_fallback_system_prompt()
 
+
+def get_email():
+    '''Retrieves the email of the logged-in user from the session.'''
+    return session.get("email", "").strip().lower() if session.get("logged_in") else None
+
+
 @app.route("/")
 def root():
     return redirect(url_for("login"))
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -38,13 +46,14 @@ def login():
 
     return render_template("login.html")
 
+
 @app.route("/chat")
 def index():
     '''Renders main application landing page.'''
     if not session.get("logged_in"):
         return redirect(url_for("login"))
 
-    email = session.get("email", "").strip().lower()
+    email = get_email()
     is_admin = email in admin_emails
 
     return render_template(
@@ -55,13 +64,14 @@ def index():
         debug_admin_list=admin_emails  
     )
 
+
 @app.route("/chat", methods=["POST"])
 def chat():
-    '''Processes user pitch input OR gives a conversational fallback.'''
+    '''Handles user submitted pitches and evaluates them using OpenAI.'''
     if not session.get("logged_in"):
         return jsonify({"error": "Unauthorized"}), 401
 
-    email = session.get("email", "").strip().lower()
+    email = get_email()
     user_message = request.json.get("message", "")
 
     if not user_message:
@@ -70,50 +80,41 @@ def chat():
     try:
         classification = is_valid_pitch(user_message)
 
-        # CASE A: not a pitch, send to GPT with the fallback prompt
         if not classification.get("is_pitch", False) or classification.get("reason") == "Placeholder":
-            fallback_messages = [
-                {"role": "system", "content": fallback_system_prompt},
-                {"role": "user",   "content": user_message}
-            ]
-
-            # call GPT so it can answer/engage and then remind them to pitch
-            fallback_response = get_completion_from_messages(
-                messages=fallback_messages,
-                model="gpt-4",       
-                temperature=0.6,      
-                max_tokens=400      
+            response = get_completion_from_messages(
+                messages=[
+                    {"role": "system", "content": fallback_system_prompt},
+                    {"role": "user", "content": user_message}
+                ],
+                model="gpt-3.5-turbo-0125",
+                temperature=0.6,
+                max_tokens=400
             )
+            return jsonify({"response": response})
 
-            return jsonify({"response": fallback_response})
-
-        # CASE B: this is a pitch, proceed with your normal evaluation flow 
-        messages = [
-            {"role": "system", "content": system_prompt},
-            {"role": "user",   "content": user_message}
-        ]
-
-        ai_feedback = get_completion_from_messages(
-            messages=messages,
-            model="gpt-4",     
-            temperature=0.4,   
+        response = get_completion_from_messages(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_message}
+            ],
+            model="gpt-4",
+            temperature=0.4,
             max_tokens=500
         )
 
-        save_submission(email or "N/A", user_message, ai_feedback)
+        save_submission(email or "N/A", user_message, response)
 
-        return jsonify({
-            "response": "Pitch submitted! It's being evaluated by the AI, trained on the Priority Pitch methodology."
-        })
+        return jsonify({"response": "Thank you for your pitch! Your submission has been received and evaluated."})
 
     except Exception as e:
-        print("ERROR in /chat route:", e)
+        traceback.print_exc()
         return jsonify({"error": "Internal Server Error"}), 500
+    
 
 @app.route("/download")
 def download_data():
     '''Allows admin users to download all submitted pitches and evaluations as CSV.'''
-    email = session.get("email", "").strip().lower()
+    email = get_email()
     if email not in admin_emails:
         return redirect(url_for("index"))
 
@@ -122,7 +123,6 @@ def download_data():
 
     output = StringIO()
     output.write('\ufeff')  
-    output.write('\ufeff')
 
     writer = csv.writer(output)
 
@@ -159,6 +159,7 @@ def download_data():
     output.seek(0)
     return Response(output, mimetype="text/csv",
                     headers={"Content-Disposition": "attachment;filename=priority_pitch_data.csv"})
+
 
 @app.route("/clean", methods=["POST"])
 def clean_pitch():

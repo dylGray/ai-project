@@ -4,7 +4,7 @@ import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 from datetime import datetime
-from google.cloud.firestore_v1 import SERVER_TIMESTAMP
+# from google.cloud.firestore_v1 import SERVER_TIMESTAMP
 
 if not firebase_admin._apps:
     firebase_json = os.getenv("FIREBASE_SERVICE_ACCOUNT_JSON")
@@ -23,9 +23,11 @@ if not firebase_admin._apps:
 
 db = firestore.client()
 
+
 def get_domain(email):
     '''Grabs domain of logged in users email.'''
     return email.split('@')[-1].lower().replace('.', '_')
+
 
 def extract_structured_feedback(raw_feedback):
     '''Extracts the AI models evaluation of a user submitted pitch.'''
@@ -57,6 +59,7 @@ def extract_structured_feedback(raw_feedback):
 
     return {k: v.strip() for k, v in sections.items()}
 
+
 def save_submission(email, pitch_text, feedback):
     '''Saves email, users submitted pitch, and AI evaluation feedback.'''
     domain = get_domain(email)
@@ -71,6 +74,7 @@ def save_submission(email, pitch_text, feedback):
 
     # store in Firestore in a collection named after the domain
     db.collection(domain).add(entry)
+
 
 def fetch_all_submissions():
     '''Grabs all submissions stored in Firestore DB.'''

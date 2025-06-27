@@ -224,3 +224,29 @@ body:not(.dark-mode) .pulsing-dot {
   50% { transform: scale(1.2); opacity: 1; }
   100% { transform: scale(0.7); opacity: 0.5; }
 }
+
+/* =====================
+   Glassmorphism for chat bubbles
+   ===================== */
+body:not(.dark-mode) .user-bubble,
+body:not(.dark-mode) .model-bubble {
+  color: #18181b !important;
+}
+.user-bubble {
+  background: rgba(59, 130, 246, 0.18); /* blue-600 with opacity */
+  color: #fff;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(59, 130, 246, 0.18);
+  box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+  transition: background 0.2s, border 0.2s;
+}
+.model-bubble {
+  background: rgba(16, 185, 129, 0.18); /* green-500 with opacity */
+  color: #fff;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border: 1px solid rgba(16, 185, 129, 0.18);
+  box-shadow: 0 4px 24px 0 rgba(31,38,135,0.10);
+  transition: background 0.2s, border 0.2s;
+}

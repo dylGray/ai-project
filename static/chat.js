@@ -41,7 +41,7 @@ chatForm.addEventListener('submit', async (e) => {
 
     chatBox.innerHTML += `
       <div class="flex items-start justify-end space-x-2 space-x-reverse mt-8">
-        <div class="bg-blue-600 text-white px-4 py-2 rounded-lg max-w-xl text-left"><span id="user-message">${userMessage}</span></div>
+        <div class="user-bubble px-4 py-2 rounded-2xl max-w-xl text-left"><span id="user-message">${userMessage}</span></div>
         <i style="margin: 2.5px -5px 0 7.5px;" class="fa-solid fa-user"></i>
       </div>
     `;
@@ -88,7 +88,7 @@ chatForm.addEventListener('submit', async (e) => {
     aiContainer.className = "flex items-start space-x-2";
     aiContainer.innerHTML = `
       <img src="/static/images/tps-logo.webp" alt="AI Logo" class="w-5 h-5 mt-2 rounded shadow-md" />
-      <div id="model-output" class="bg-green-700 text-white px-4 py-2 rounded-lg max-w-xl typewriter-output"></div>
+      <div id="model-output" class="model-bubble px-4 py-2 rounded-2xl max-w-xl typewriter-output"></div>
     `;
     chatBox.appendChild(aiContainer);
     chatBox.scrollTop = chatBox.scrollHeight;

@@ -13,6 +13,7 @@ if not api_key:
 
 client = OpenAI(api_key=api_key)
 
+
 @lru_cache(maxsize=8)
 def load_yaml_cached(path):
     '''Loads and caches YAML files'''
@@ -27,6 +28,7 @@ def load_yaml_cached(path):
     except Exception as e:
         print(f"Warning: Could not load {path}: {e}")
         return {}
+    
 
 def build_system_prompt():
     '''Builds an efficient, structured system prompt from pitch_assets.'''
@@ -131,10 +133,6 @@ def build_system_prompt():
     == Examples ==
     {format_examples(good_examples, 'Good')}{format_examples(ok_examples, 'OK')}{format_examples(bad_examples, 'Bad')}
 
-    Your only job is to evaluate elevator pitches according to the above criteria and examples. Do not provide writing advice or revisions.
-    """
-
-    prompt += """
     == OUTPUT FORMAT ==
     When evaluating an elevator pitch, respond strictly in the following format:
 
@@ -147,28 +145,49 @@ def build_system_prompt():
     Clarity [text]
 
     If a section does not apply or is not present, use "N/A" and explain what the user should have included.
+
+    Your only job is to evaluate elevator pitches according to the above criteria and examples. Do not provide writing advice or revisions.
     """
 
     return prompt
 
-def build_fallback_system_prompt():
-    '''Builds a fallback system prompt for non-pitch interactions.'''
-    lines = [
-        "You are a friendly, conversational assistant designed to help users share their elevator pitches.\n\n",
-        "Your primary goals:\n",
-        "1. If the user is asking questions or making small talk, respond naturally and helpfully.\n",
-        "2. Gently encourage users to share their elevator pitch when appropriate.\n",
-        "3. When a user shares their pitch, acknowledge it positively and thank them (e.g., 'Thank you for sharing your pitch!')\n",
-        "4. NEVER provide evaluation, feedback, scores, or suggestions for improvement on pitches.\n",
-        "5. NEVER mention that evaluation happens behind the scenes.\n",
-        "6. If users ask for feedback or help improving their pitch, politely decline: ",
-        '"I appreciate you sharing your pitch, but I\'m not able to provide feedback or suggestions for improvement."\n',
-        "7. After someone shares a pitch, you can ask if they have any other questions or if there\'s anything else you can help with.\n",
-        "8. Keep the conversation focused on pitch collection, not pitch improvement.\n\n",
-        "Remember: Your job is to collect pitches in a friendly way, acknowledge them when shared, but never evaluate or provide feedback."
-    ]
 
-    return "".join(lines)
+def build_fallback_system_prompt():
+    return """
+    You are a friendly conversational assistant.
+
+    Your primary role is to collect elevator pitches from users. You do not help write, craft, edit, or improve pitches, and you do not provide feedback or suggestions.
+
+    == Behavior Guidelines ==
+    - You are allowed to answer general questions, small talk, fun facts, math problems, or casual conversation.
+    - Whenever answering a general question, always remind the user that your main role is to collect their elevator pitch.
+
+    - If a user shares their pitch, reply with a simple acknowledgment like: 
+    "Thank you for sharing your pitch!"
+
+    - If a user asks for help writing, crafting, revising, or improving their pitch, politely decline:
+    "I'm not able to help with that. My job is only to collect pitches."
+
+    - Do NOT explain that an evaluation happens behind the scenes.
+
+    == Examples ==
+    User: What's 2 + 2?
+    Assistant: 2 + 2 is 4. By the way, if you have an elevator pitch you'd like to share, I'm happy to hear it!
+
+    User: Who won the World Series in 2023?
+    Assistant: The Texas Rangers won the 2023 World Series! And if you have an elevator pitch, feel free to share it with me.
+
+    User: Can you help me write my pitch?
+    Assistant: I'm not able to help with that. My job is only to collect pitches.
+
+    User: What do you do?
+    Assistant: I can chat with you and answer questions, but my main job is to collect elevator pitches. If you have one ready, feel free to share it!
+
+    == Important Rules ==
+    - Never offer to help improve, revise, or write a pitch.
+    - Always bring the conversation back to inviting the user to share their pitch.
+    """
+
 
 def is_valid_pitch(user_input):
     '''
@@ -178,15 +197,15 @@ def is_valid_pitch(user_input):
     placeholders = ["here is my pitch", "my pitch is", "test", "sample", "coming soon", "tbd", "to be added", "n/a", "na", "none", "placeholder", "draft", "lorem ipsum", "write my pitch", "i will write my pitch", "this is my pitch", "pitch", "elevator pitch", "submit", "hello", "hi", "-", "...", "?", "!", "[your pitch here]", "[insert pitch]"]
 
     normalized = user_input.strip().lower()
+
     if normalized in placeholders:
-        print("[DEBUG] Input matched placeholder list. Not a valid pitch.")
         return {"is_pitch": False, "reason": "Placeholder"}
+    
     for ph in placeholders:
         if normalized.startswith(ph) or normalized.endswith(ph):
-            print(f"[DEBUG] Input starts or ends with placeholder '{ph}'. Not a valid pitch.")
             return {"is_pitch": False, "reason": "Placeholder"}
+        
     if len(normalized) < 15:
-        print("[DEBUG] Input too short to be a valid pitch.")
         return {"is_pitch": False, "reason": "Placeholder"}
     
     classification_prompt = [
@@ -214,11 +233,11 @@ def is_valid_pitch(user_input):
             max_tokens=50,
         )
         result = json.loads(response.choices[0].message.content.strip())
-        print(f"[DEBUG] is_valid_pitch result: {result}")
         return result
     except Exception as e:
         print("Error during input classification:", e)
         return {"is_pitch": True, "reason": "Fallback"}
+    
 
 def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_tokens=500):
     '''Sends a prompt and message history to OpenAI's GPT model to get a generated completion.'''
@@ -233,14 +252,17 @@ def get_completion_from_messages(messages, model="gpt-4", temperature=0.4, max_t
     except Exception as e:
         print(f"Error fetching completion: {e}")
         return None
+    
 
 @lru_cache(maxsize=1)
 def get_cached_system_prompt():
     return build_system_prompt()
 
+
 @lru_cache(maxsize=1)
 def get_cached_fallback_system_prompt():
     return build_fallback_system_prompt()
+
 
 def summarize_feedback(submissions):
     '''Summarizes common weaknesses across multiple pitch evaluations.'''
